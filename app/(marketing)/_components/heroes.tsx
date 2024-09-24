@@ -4,7 +4,7 @@ const Heroes = () => {
   return (
     <div className='flex flex-col items-center justify-center max-w-5xl'>
       <div className='flex items-center'>
-        <div className='relative w-[300px] h-[300px] sm:w-[350px] sm:h-[350px] md:h-[400px] md:w-[400px]'>
+        <div className='relative w-[240px] h-[240px] md:w-[300px] md:h-[300px]'>
           <Image
             src='/heroes/heroes_02.png'
             fill
@@ -12,7 +12,7 @@ const Heroes = () => {
             alt='hero'
           />
         </div>
-        <div className='relative h-[400px] w-[400px] hidden md:block'>
+        <div className='relative h-[300px] w-[300px] hidden md:block'>
           <Image
             src={'/heroes/heroes_01.png'}
             fill

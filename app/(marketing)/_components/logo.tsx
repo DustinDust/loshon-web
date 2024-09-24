@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { Poppins } from 'next/font/google';
 
@@ -11,7 +13,21 @@ const font = Poppins({
 const Logo = () => {
   return (
     <div className='hidden md:flex items-center gap-x-2'>
-      <Image src={'/logo.svg'} height={40} width={40} alt='logo' />
+      <Image
+        src='/logo_light.png'
+        height='20'
+        width='20'
+        alt='logo'
+        className='dark:hidden'
+      />
+      <Image
+        src='/logo_dark.png'
+        height='20'
+        width='20'
+        alt='logo'
+        className='hidden dark:block'
+      />
+      <p className={cn('font-semibold', font.className)}>Lo&apos;shon</p>
     </div>
   );
 };
