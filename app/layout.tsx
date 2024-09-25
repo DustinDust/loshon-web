@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from './theme-provider';
-import { SessionProvider } from 'next-auth/react';
+import { ClerkProvider } from '@clerk/nextjs';
+import { Poppins } from 'next/font/google';
 
 export const metadata: Metadata = {
   title: "Lo'shon",
@@ -20,11 +21,11 @@ export const metadata: Metadata = {
   ],
 };
 
-// const poppins = Poppins({
-//   subsets: ['latin'],
-//   display: 'swap',
-//   weight: '500',
-// });
+const poppins = Poppins({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: '500',
+});
 
 export default function RootLayout({
   children,
@@ -32,9 +33,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
-      <body>
-        <SessionProvider>
+    <ClerkProvider>
+      <html lang='en'>
+        <body className={`${poppins.className}`}>
           <ThemeProvider
             attribute='class'
             defaultTheme='system'
@@ -43,8 +44,8 @@ export default function RootLayout({
           >
             {children}
           </ThemeProvider>
-        </SessionProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
