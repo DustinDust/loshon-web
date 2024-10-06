@@ -26,7 +26,6 @@ export const Item = ({
   id,
   isSearch,
   level = 0,
-  onExpand,
 }: ItemProps) => {
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;
 
