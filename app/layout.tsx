@@ -3,6 +3,7 @@ import './globals.css';
 import { ThemeProvider } from './theme-provider';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Poppins } from 'next/font/google';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   title: "Lo'shon",
@@ -42,6 +43,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Toaster position='top-center' />
             {children}
           </ThemeProvider>
         </body>

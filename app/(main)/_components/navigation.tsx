@@ -1,21 +1,44 @@
 'use client';
 
-import { ChevronsLeft, MenuIcon } from 'lucide-react';
+import {
+  ChevronsLeft,
+  MenuIcon,
+  PlusCircle,
+  Search,
+  Settings,
+} from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import React, { ElementRef, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 
 import { cn } from '@/lib/utils';
 import { UserItem } from './user-item';
+import {
+  useCreateDocument,
+  useDocuments,
+} from '../(routes)/documents/_hooks/use-document';
+import { Spinner } from '@/components/spinner';
+import { Item } from './item';
+import { useUser } from '@clerk/nextjs';
+import { toast } from 'sonner';
+
 export const Navigation = () => {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const pathname = usePathname();
+  const { user } = useUser();
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<'aside'>>(null);
   const navbarRef = useRef<ElementRef<'div'>>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollasped, setIsCollapsed] = useState(isMobile);
+  const {
+    data: documents,
+    error: fetchError,
+    isLoading: isDocumentFetching,
+  } = useDocuments();
+
+  const { trigger: triggerCreate } = useCreateDocument();
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -97,6 +120,30 @@ export const Navigation = () => {
     }
   }, [pathname, isMobile]);
 
+  const handleCreate = async () => {
+    const loadingToast = toast.loading('Creating...');
+    triggerCreate(
+      {
+        title: 'Untitled',
+        userId: user?.id,
+        isArchived: false,
+        isPublished: false,
+      },
+      {
+        onSuccess: (data) => {
+          toast.dismiss(loadingToast);
+          console.log('data', data);
+          toast.success('Success');
+        },
+        onError: (err) => {
+          toast.dismiss(loadingToast);
+          console.log('err', err);
+          toast.error('Error');
+        },
+      }
+    );
+  };
+
   return (
     <>
       <aside
@@ -118,9 +165,21 @@ export const Navigation = () => {
         </div>
         <div>
           <UserItem />
+          <Item onClick={handleCreate} label='New Page' icon={PlusCircle} />
+          <Item label='Search' icon={Search} isSearch onClick={() => {}} />
+          <Item label='Settings' icon={Settings} onClick={() => {}} />
         </div>
         <div className='mt-4'>
-          <p>Documents</p>
+          {isDocumentFetching && (
+            <div className='flex justify-center'>
+              <Spinner />
+            </div>
+          )}
+          {!isDocumentFetching &&
+            !fetchError &&
+            documents?.map((document) => (
+              <p key={document.id}>{document.title}</p>
+            ))}
         </div>
         <div
           onMouseDown={handleMouseDown}
