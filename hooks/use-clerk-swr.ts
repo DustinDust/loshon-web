@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { HttpError } from '@/lib/types';
+import { HttpError, TResponse } from '@/lib/types';
 import { useAuth } from '@clerk/nextjs';
 import useSWR, { SWRConfiguration } from 'swr';
 import useSWRMutation, { SWRMutationConfiguration } from 'swr/mutation';
 
 export function useClerkSWR<R>(
+  key: string,
   path: string,
   requestOptions: RequestInit = {},
-  swrOptions: SWRConfiguration<R> = {}
+  swrOptions: SWRConfiguration<TResponse<R>> = {}
 ) {
   const { getToken } = useAuth();
   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/${path}`;
 
-  const fetcher = async (url: string) => {
+  const fetcher = async () => {
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${await getToken()}` },
       ...requestOptions,
@@ -25,18 +26,19 @@ export function useClerkSWR<R>(
     }
     return res.json();
   };
-  return useSWR<R, HttpError>(url, fetcher, swrOptions);
+  return useSWR<TResponse<R>, HttpError>(key, fetcher, swrOptions);
 }
 
 export function useMutateClerkSWR<R>(
+  key: string,
   path: string,
   requestOptions: RequestInit = {},
-  swrOptions: SWRMutationConfiguration<R, HttpError> = {}
+  swrOptions: SWRMutationConfiguration<TResponse<R>, HttpError> = {}
 ) {
   const { getToken } = useAuth();
   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/${path}`;
 
-  const fetcher = async (url: string, { arg }: { arg: R }) => {
+  const fetcher = async (_: string, { arg }: { arg: R }) => {
     const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${await getToken()}`,
@@ -53,5 +55,5 @@ export function useMutateClerkSWR<R>(
     }
     return res.json();
   };
-  return useSWRMutation(url, fetcher, swrOptions);
+  return useSWRMutation(key, fetcher, swrOptions);
 }

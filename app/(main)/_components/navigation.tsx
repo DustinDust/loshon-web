@@ -13,14 +13,11 @@ import { useMediaQuery } from 'usehooks-ts';
 
 import { cn } from '@/lib/utils';
 import { UserItem } from './user-item';
-import {
-  useCreateDocument,
-  useDocuments,
-} from '../(routes)/documents/_hooks/use-document';
-import { Spinner } from '@/components/spinner';
+import { useCreateDocument } from '../(routes)/documents/_hooks/use-document';
 import { Item } from './item';
 import { useUser } from '@clerk/nextjs';
 import { toast } from 'sonner';
+import { DocumentList } from './document-list';
 
 export const Navigation = () => {
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -32,11 +29,6 @@ export const Navigation = () => {
   const navbarRef = useRef<ElementRef<'div'>>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollasped, setIsCollapsed] = useState(isMobile);
-  const {
-    data: documents,
-    error: fetchError,
-    isLoading: isDocumentFetching,
-  } = useDocuments();
 
   const { trigger: triggerCreate } = useCreateDocument();
 
@@ -170,16 +162,7 @@ export const Navigation = () => {
           <Item label='Settings' icon={Settings} onClick={() => {}} />
         </div>
         <div className='mt-4'>
-          {isDocumentFetching && (
-            <div className='flex justify-center'>
-              <Spinner />
-            </div>
-          )}
-          {!isDocumentFetching &&
-            !fetchError &&
-            documents?.map((document) => (
-              <p key={document.id}>{document.title}</p>
-            ))}
+          <DocumentList />
         </div>
         <div
           onMouseDown={handleMouseDown}

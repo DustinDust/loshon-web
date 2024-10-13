@@ -3,7 +3,7 @@ export type Document = {
   title: string;
   userId: string;
   isArchived: boolean;
-  parentId?: string;
+  parentDocument?: string;
   content?: string;
   coverImage?: string;
   icon?: string;
@@ -12,6 +12,8 @@ export type Document = {
   updatedAt?: Date;
   deletedAt?: Date;
 };
+
+export type CreateDocument = Partial<Document>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class HttpError<T = any> extends Error {
@@ -24,3 +26,10 @@ export class HttpError<T = any> extends Error {
     this.status = status;
   }
 }
+
+export type TResponse<T> = {
+  data: T;
+  total?: number;
+  page?: number;
+  pageSize?: number;
+};
