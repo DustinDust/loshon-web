@@ -3,7 +3,7 @@ export type Document = {
   title: string;
   userId: string;
   isArchived: boolean;
-  parentDocument?: string;
+  parentDocumentId?: string;
   content?: string;
   coverImage?: string;
   icon?: string;

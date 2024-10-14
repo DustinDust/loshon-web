@@ -1,10 +1,25 @@
 'use client';
 
+import {
+  DropdownMenu,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMutateClerkSWR } from '@/hooks/use-clerk-swr';
 import { CreateDocument, Document } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronRight, LucideIcon, Plus } from 'lucide-react';
+import { useUser } from '@clerk/nextjs';
+import {
+  ChevronDown,
+  ChevronRight,
+  LucideIcon,
+  MoreHorizontal,
+  Plus,
+  TrashIcon,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -19,6 +34,7 @@ interface ItemProps {
   label: string;
   onClick: () => void;
   icon: LucideIcon;
+  parentId?: string;
 }
 
 export const Item = ({
@@ -32,7 +48,9 @@ export const Item = ({
   isSearch,
   level = 0,
   onExpand,
+  parentId = '',
 }: ItemProps) => {
+  const { user } = useUser();
   const handleExpand = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -41,9 +59,10 @@ export const Item = ({
   };
 
   const router = useRouter();
-  const { trigger } = useMutateClerkSWR<CreateDocument>(
-    'document',
-    'document',
+
+  const { trigger: triggerCreateChild } = useMutateClerkSWR<CreateDocument>(
+    `document/${id}`,
+    `document`,
     { method: 'POST' }
   );
 
@@ -53,10 +72,10 @@ export const Item = ({
     if (!id) return;
     const loadingToast = toast.loading('Creating document...');
 
-    trigger(
+    triggerCreateChild(
       {
         title: 'Untitled',
-        parentDocument: id,
+        parentDocumentId: id,
       },
       {
         onSuccess(data: Document) {
@@ -64,10 +83,36 @@ export const Item = ({
             onExpand?.();
           }
 
-          router.push(`documents/${data.id}`);
+          // router.push(`documents/${data.id}`);
           toast.success('Success!', {
             duration: 3000,
           });
+          toast.dismiss(loadingToast);
+        },
+        onError(err) {
+          console.log(err);
+          toast.error(err.message, { duration: 3000 });
+          toast.dismiss(loadingToast);
+        },
+      }
+    );
+  };
+
+  const { trigger: triggerArchive } = useMutateClerkSWR(
+    `document${parentId ? `/${parentId}` : ''}`,
+    `document/${id}`,
+    { method: 'DELETE' }
+  );
+
+  const onDelete = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    if (!id) return;
+    const loadingToast = toast.loading('Moving to trash...');
+    triggerArchive(
+      {},
+      {
+        onSuccess() {
+          toast.success(`Success!`, { duration: 3000 });
           toast.dismiss(loadingToast);
         },
         onError(err) {
@@ -113,6 +158,31 @@ export const Item = ({
       )}
       {!!id && (
         <div className='ml-auto flex items-center gap-x-2'>
+          <DropdownMenu>
+            <DropdownMenuTrigger onClick={(e) => e.stopPropagation()} asChild>
+              <div
+                role='button'
+                className='opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600'
+              >
+                <MoreHorizontal className='h-4 w-4 text-muted-foreground' />
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className='w-60'
+              align='start'
+              side='right'
+              forceMount
+            >
+              <DropdownMenuItem onClick={onDelete}>
+                <TrashIcon className='w-4 h-4 mr-2' />
+                Delete
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <div className='text-xs text-muted-foreground p-2'>
+                Last edited by: {user?.fullName}
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <div
             role='button'
             onClick={onCreate}
@@ -134,8 +204,8 @@ Item.Skeleton = function itemSkeleton({ level }: { level: number }) {
       }}
       className='flex gap-x-2 py-[3px]'
     >
-      <Skeleton className='h-4 w-4 bg-zinc-200' />
-      <Skeleton className='h-4 w-[30%]  bg-zinc-200' />
+      <Skeleton className='h-4 w-4 bg-zinc-200 dark:bg-zinc-700' />
+      <Skeleton className='h-4 w-[30%]  bg-zinc-200 dark:bg-zinc-700' />
     </div>
   );
 };
