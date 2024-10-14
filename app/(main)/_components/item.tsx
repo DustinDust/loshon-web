@@ -20,7 +20,6 @@ import {
   Plus,
   TrashIcon,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 interface ItemProps {
@@ -58,8 +57,6 @@ export const Item = ({
     onExpand?.();
   };
 
-  const router = useRouter();
-
   const { trigger: triggerCreateChild } = useMutateClerkSWR<CreateDocument>(
     `document/${id}`,
     `document`,
@@ -83,6 +80,7 @@ export const Item = ({
             onExpand?.();
           }
 
+          console.log(data);
           // router.push(`documents/${data.id}`);
           toast.success('Success!', {
             duration: 3000,
