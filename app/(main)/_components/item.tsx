@@ -29,16 +29,15 @@ interface ItemProps {
   expanded?: boolean;
   isSearch?: boolean;
   level?: number;
-  onExpand?: () => void;
   label: string;
-  onClick: () => void;
   icon: LucideIcon;
   parentId?: string;
+  onExpand?: () => void;
+  onClick?: () => void;
 }
 
 export const Item = ({
   label,
-  onClick,
   icon: Icon,
   active,
   documentIcon,
@@ -46,8 +45,9 @@ export const Item = ({
   id,
   isSearch,
   level = 0,
-  onExpand,
   parentId = '',
+  onExpand,
+  onClick,
 }: ItemProps) => {
   const { user } = useUser();
   const handleExpand = (

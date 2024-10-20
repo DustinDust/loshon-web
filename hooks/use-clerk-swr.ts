@@ -48,7 +48,7 @@ export function useMutateClerkSWR<R>(
       body: JSON.stringify(arg || {}),
     });
     if (!res.ok) {
-      const err = new HttpError('Error creating data');
+      const err = new HttpError('Some error has occurred');
       err.status = res.status;
       err.info = await res.json();
       throw err;
