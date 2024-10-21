@@ -11,6 +11,7 @@ import { Spinner } from '@/components/spinner';
 import { Search, Trash, Undo } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useSWRConfig } from 'swr';
+import { ConfirmModal } from '@/components/modals/confirm-model';
 
 const useArchivedDocument = () => {
   return useClerkSWR<Document[]>(`archived/document`, 'archived/document');
@@ -55,6 +56,7 @@ const useDeleteDocument = () => {
         Authorization: `Bearer ${await getToken()}`,
         'Content-Type': 'application/json',
       },
+      method: 'DELETE',
     });
     if (!res.ok) {
       const err = new HttpError('Error Deleting data');
@@ -70,10 +72,9 @@ const useDeleteDocument = () => {
 export const TrashBox = () => {
   const router = useRouter();
   // const params = useParams();
-  const { data: documents, isLoading } = useArchivedDocument();
+  const { data: documents, isLoading: isFetching } = useArchivedDocument();
   const { trigger: triggerRestore } = useRestoreDocument();
-  // TODO: add delete model
-  useDeleteDocument();
+  const { trigger: triggerDelete } = useDeleteDocument();
   const { mutate } = useSWRConfig();
 
   const [search, setSearch] = useState('');
@@ -106,13 +107,23 @@ export const TrashBox = () => {
     );
   };
 
-  if (isLoading) {
-    return (
-      <div className='h-full flex items-center justify-center p-4'>
-        <Spinner size='lg' />
-      </div>
+  const onRemove = (documentId: string) => {
+    const loadingToast = toast.loading('Permantly deleting...');
+    triggerDelete(
+      { documentId: documentId },
+      {
+        onSuccess: () => {
+          toast.dismiss(loadingToast);
+          toast.success('Success!', { duration: 3000 });
+        },
+        onError: (err) => {
+          console.log(err);
+          toast.dismiss(loadingToast);
+          toast.error('Error deleting', { duration: 3000 });
+        },
+      }
     );
-  }
+  };
 
   return (
     <div className='text-sm'>
@@ -125,36 +136,44 @@ export const TrashBox = () => {
           placeholder='Filter by title...'
         />
       </div>
-      <div className='mt-2 px-1 pb-1'>
-        <p className='hidden last:block text-cs text-center text-muted-foreground'>
-          No documents found.
-        </p>
-        {filteredDocuments?.map((document) => (
-          <div
-            key={document.id}
-            role='button'
-            onClick={() => onClick(document.id)}
-            className='text-sm rounded-sm w-full hover:bg-primary/5 flex items-center text-primary justify-between'
-          >
-            <span className='truncate pl-2'>{document.title}</span>
-            <div className='flex items-center'>
-              <div
-                onClick={(e) => onRestore(e, document.id)}
-                role='button'
-                className='rounded-sm p-2 hover:bg-neutral-200'
-              >
-                <Undo className='h-4 w-4 text-muted-foreground' />
-              </div>
-              <div
-                role='button'
-                className='rounded-sm p-2 hover:bg-neutral-200'
-              >
-                <Trash className='h-4 w-4 text-muted-foreground' />
+      {isFetching ? (
+        <div className='h-full flex items-center justify-center p-4'>
+          <Spinner size='lg' />
+        </div>
+      ) : (
+        <div className='mt-2 px-1 pb-1'>
+          <p className='hidden last:block text-cs text-center text-muted-foreground'>
+            No documents found.
+          </p>
+          {filteredDocuments?.map((document) => (
+            <div
+              key={document.id}
+              role='button'
+              onClick={() => onClick(document.id)}
+              className='text-sm rounded-sm w-full hover:bg-primary/5 flex items-center text-primary justify-between'
+            >
+              <span className='truncate pl-2'>{document.title}</span>
+              <div className='flex items-center'>
+                <div
+                  onClick={(e) => onRestore(e, document.id)}
+                  role='button'
+                  className='rounded-sm p-2 hover:bg-neutral-200'
+                >
+                  <Undo className='h-4 w-4 text-muted-foreground' />
+                </div>
+                <ConfirmModal onConfirm={() => onRemove(document.id)}>
+                  <div
+                    role='button'
+                    className='rounded-sm p-2 hover:bg-neutral-200'
+                  >
+                    <Trash className='h-4 w-4 text-muted-foreground' />
+                  </div>
+                </ConfirmModal>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
