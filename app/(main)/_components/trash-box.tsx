@@ -11,7 +11,7 @@ import { Spinner } from '@/components/spinner';
 import { Search, Trash, Undo } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useSWRConfig } from 'swr';
-import { ConfirmModal } from '@/components/modals/confirm-model';
+import { ConfirmModal } from '@/components/modals/confirm-modal';
 
 const useArchivedDocument = () => {
   return useClerkSWR<Document[]>(`archived/document`, 'archived/document');
@@ -157,14 +157,14 @@ export const TrashBox = () => {
                 <div
                   onClick={(e) => onRestore(e, document.id)}
                   role='button'
-                  className='rounded-sm p-2 hover:bg-neutral-200'
+                  className='rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600'
                 >
                   <Undo className='h-4 w-4 text-muted-foreground' />
                 </div>
                 <ConfirmModal onConfirm={() => onRemove(document.id)}>
                   <div
                     role='button'
-                    className='rounded-sm p-2 hover:bg-neutral-200'
+                    className='rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600'
                   >
                     <Trash className='h-4 w-4 text-muted-foreground' />
                   </div>

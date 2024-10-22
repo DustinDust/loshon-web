@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { ThemeProvider } from './theme-provider';
+import { ThemeProvider } from '../components/providers/theme-provider';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Poppins } from 'next/font/google';
 import { Toaster } from 'sonner';
+import { ModalProvider } from '@/components/providers/modal-provider';
 
 export const metadata: Metadata = {
   title: "Lo'shon",
@@ -43,6 +44,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <ModalProvider />
             <Toaster position='top-center' closeButton />
             {children}
           </ThemeProvider>
