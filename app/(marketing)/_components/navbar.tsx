@@ -1,21 +1,19 @@
 'use client';
 
-import { useScrollTop } from '@/hooks/use-scroll-top';
-import { cn } from '@/lib/utils';
-import Logo from './logo';
-import { ModeToggle } from '@/components/mode-toggle';
 import {
   SignInButton,
   SignUpButton,
   UserButton,
   useSession,
 } from '@clerk/nextjs';
+import Link from 'next/link';
+
+import { useScrollTop } from '@/hooks/use-scroll-top';
+import { cn } from '@/lib/utils';
+import Logo from './logo';
+import { ModeToggle } from '@/components/mode-toggle';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/spinner';
-import Link from 'next/link';
-// import { Button } from '@/components/ui/button';
-// import { Spinner } from '@/components/spinner';
-// import Link from 'next/link';
 
 export const NavBar = () => {
   const scrolled = useScrollTop();

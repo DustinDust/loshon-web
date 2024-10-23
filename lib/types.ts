@@ -14,6 +14,17 @@ export type Document = {
 };
 
 export type CreateDocument = Partial<Document>;
+export type UpdateDocument = Partial<
+  Pick<
+    Document,
+    | 'content'
+    | 'coverImage'
+    | 'parentDocumentId'
+    | 'title'
+    | 'icon'
+    | 'isPublished'
+  >
+>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class HttpError<T = any> extends Error {

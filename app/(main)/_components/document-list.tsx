@@ -1,12 +1,13 @@
 'use client';
 
-import { Document } from '@/lib/types';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useClerkSWR } from '@/hooks/use-clerk-swr';
+import { FileIcon } from 'lucide-react';
+
+import { Document } from '@/lib/types';
 import { Item } from './item';
 import { cn } from '@/lib/utils';
-import { FileIcon } from 'lucide-react';
+import { useDocuments } from '../(routes)/documents/_hooks/use-document';
 
 interface DocumentListProps {
   parentDocumentId?: string;
@@ -32,10 +33,7 @@ export const DocumentList = ({
     });
   };
 
-  const { data, isLoading } = useClerkSWR<Document[]>(
-    `document${!!parentDocumentId ? `/${parentDocumentId}` : ''}`,
-    `document${!!parentDocumentId ? `?parentDocument=${parentDocumentId}` : ''}`
-  );
+  const { data, isLoading } = useDocuments(parentDocumentId);
 
   const onRedirect = (documentId: string) => {
     router.push(`/documents/${documentId}`);

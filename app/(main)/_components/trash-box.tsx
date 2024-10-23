@@ -1,78 +1,23 @@
 'use client';
-
-import { useRouter } from 'next/navigation';
-import useSWRMutation from 'swr/mutation';
-import { useAuth } from '@clerk/nextjs';
-import { useState } from 'react';
-import { Document, HttpError } from '@/lib/types';
-import { useClerkSWR } from '@/hooks/use-clerk-swr';
-import { toast } from 'sonner';
-import { Spinner } from '@/components/spinner';
-import { Search, Trash, Undo } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { useSWRConfig } from 'swr';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Search, Trash, Undo } from 'lucide-react';
+
+import { Spinner } from '@/components/spinner';
+import { Input } from '@/components/ui/input';
 import { ConfirmModal } from '@/components/modals/confirm-modal';
-
-const useArchivedDocument = () => {
-  return useClerkSWR<Document[]>(`archived/document`, 'archived/document');
-};
-
-const useRestoreDocument = () => {
-  const { getToken } = useAuth();
-  const baseURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/archived/document`;
-
-  const fetcher = async (
-    _: string,
-    { arg }: { arg: { documentId: string } }
-  ) => {
-    const res = await fetch(`${baseURL}/${arg.documentId}`, {
-      headers: {
-        Authorization: `Bearer ${await getToken()}`,
-        'Content-Type': `application/json`,
-      },
-      method: 'PATCH',
-    });
-    if (!res.ok) {
-      const err = new HttpError('Error restoring data');
-      err.status = res.status;
-      err.info = await res.json();
-      throw err;
-    }
-    return res.json();
-  };
-
-  return useSWRMutation('archived/document', fetcher);
-};
-
-const useDeleteDocument = () => {
-  const { getToken } = useAuth();
-  const baseURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/archived/document`;
-  const fetcher = async (
-    _: string,
-    { arg }: { arg: { documentId: string } }
-  ) => {
-    const res = await fetch(`${baseURL}/${arg.documentId}`, {
-      headers: {
-        Authorization: `Bearer ${await getToken()}`,
-        'Content-Type': 'application/json',
-      },
-      method: 'DELETE',
-    });
-    if (!res.ok) {
-      const err = new HttpError('Error Deleting data');
-      err.status = res.status;
-      err.info = await res.json();
-      throw err;
-    }
-    return res.json();
-  };
-  return useSWRMutation('archived/document', fetcher);
-};
+import {
+  useArchivesDocument,
+  useDeleteDocument,
+  useRestoreDocument,
+} from '../(routes)/documents/_hooks/use-document';
 
 export const TrashBox = () => {
   const router = useRouter();
   // const params = useParams();
-  const { data: documents, isLoading: isFetching } = useArchivedDocument();
+  const { data: documents, isLoading: isFetching } = useArchivesDocument();
   const { trigger: triggerRestore } = useRestoreDocument();
   const { trigger: triggerDelete } = useDeleteDocument();
   const { mutate } = useSWRConfig();

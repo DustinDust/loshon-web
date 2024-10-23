@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { HttpError, TResponse } from '@/lib/types';
 import { useAuth } from '@clerk/nextjs';
 import useSWR, { SWRConfiguration } from 'swr';
 import useSWRMutation, { SWRMutationConfiguration } from 'swr/mutation';
+
+import { HttpError, TResponse } from '@/lib/types';
 
 export function useClerkSWR<R>(
   key: string,

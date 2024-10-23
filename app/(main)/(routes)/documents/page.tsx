@@ -2,10 +2,11 @@
 
 import Image from 'next/image';
 import { useUser } from '@clerk/nextjs';
-import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
-import { useCreateDocument } from './_hooks/use-document';
 import { toast } from 'sonner';
+
+import { Button } from '@/components/ui/button';
+import { useCreateDocument } from './_hooks/use-document';
 
 const DocumentPage = () => {
   const { user } = useUser();

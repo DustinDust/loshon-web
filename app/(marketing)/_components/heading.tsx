@@ -1,10 +1,11 @@
 'use client';
 
-import { Spinner } from '@/components/spinner';
-import { Button } from '@/components/ui/button';
 import { SignInButton, useSession } from '@clerk/nextjs';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+
+import { Spinner } from '@/components/spinner';
+import { Button } from '@/components/ui/button';
 
 const Heading = () => {
   const { isSignedIn, isLoaded } = useSession();

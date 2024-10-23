@@ -32,7 +32,6 @@ export const SearchCommand = () => {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      console.log(e);
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         toggle();

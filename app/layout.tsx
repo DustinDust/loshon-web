@@ -1,10 +1,12 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import { ThemeProvider } from '../components/providers/theme-provider';
-import { ClerkProvider } from '@clerk/nextjs';
 import { Poppins } from 'next/font/google';
 import { Toaster } from 'sonner';
+import { ClerkProvider } from '@clerk/nextjs';
+import type { Metadata } from 'next';
+
+import { ThemeProvider } from '../components/providers/theme-provider';
 import { ModalProvider } from '@/components/providers/modal-provider';
+
+import './globals.css';
 
 export const metadata: Metadata = {
   title: "Lo'shon",

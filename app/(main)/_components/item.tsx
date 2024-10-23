@@ -1,5 +1,16 @@
 'use client';
 
+import { useUser } from '@clerk/nextjs';
+import {
+  ChevronDown,
+  ChevronRight,
+  LucideIcon,
+  MoreHorizontal,
+  Plus,
+  TrashIcon,
+} from 'lucide-react';
+import { toast } from 'sonner';
+
 import {
   DropdownMenu,
   DropdownMenuSeparator,
@@ -11,16 +22,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useMutateClerkSWR } from '@/hooks/use-clerk-swr';
 import { CreateDocument, Document } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { useUser } from '@clerk/nextjs';
-import {
-  ChevronDown,
-  ChevronRight,
-  LucideIcon,
-  MoreHorizontal,
-  Plus,
-  TrashIcon,
-} from 'lucide-react';
-import { toast } from 'sonner';
 
 interface ItemProps {
   id?: string;
