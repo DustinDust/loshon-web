@@ -59,8 +59,8 @@ export const Item = ({
   };
 
   const { trigger: triggerCreateChild } = useMutateClerkSWR<CreateDocument>(
-    `document/${id}`,
-    `document`,
+    `documents?parentDocument=${id}`,
+    `documents`,
     { method: 'POST' }
   );
 
