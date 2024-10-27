@@ -3,22 +3,22 @@
 import { useRef, useState } from 'react';
 
 import { Document } from '@/lib/types';
-import { useUpdateDocument } from '../(routes)/documents/_hooks/use-document';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface TitleProps {
-  initialData: Document;
+  document: Document;
+  onUpdate: (title: string) => void;
 }
 
-export const Title = ({ initialData }: TitleProps) => {
-  const { trigger: triggerUpdate } = useUpdateDocument(initialData);
+export const Title = ({ document, onUpdate }: TitleProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [title, setTitle] = useState(initialData.title || 'Untitled');
+  const [title, setTitle] = useState(document.title || 'Untitled');
 
   const enableInput = () => {
-    setTitle(initialData.title);
+    setTitle(document.title);
     setIsEditing(true);
     setTimeout(() => {
       inputRef.current?.focus();
@@ -26,43 +26,29 @@ export const Title = ({ initialData }: TitleProps) => {
     }, 0);
   };
 
-  const disableInput = () => {
+  const disableInputAndSubmit = () => {
     setIsEditing(false);
+    onUpdate(title.trim());
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
-    triggerUpdate(
-      {
-        body: JSON.stringify({
-          title: event.target.value || 'Untitled',
-        }),
-      },
-      {
-        onSuccess: (dat) => {
-          console.log(dat);
-        },
-        onError: (err) => {
-          console.log(err);
-        },
-      }
-    );
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      disableInput();
+      disableInputAndSubmit();
     }
   };
 
   return (
     <div className='flex items-center gap-x-1'>
-      {!!initialData.icon && <p>{initialData.icon}</p>}
+      {!!document.icon && <p>{document.icon}</p>}
       {isEditing ? (
         <Input
           ref={inputRef}
           onClick={enableInput}
-          onBlur={disableInput}
+          onBlur={disableInputAndSubmit}
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={title}
@@ -75,9 +61,13 @@ export const Title = ({ initialData }: TitleProps) => {
           size='sm'
           className='font-normal h-auto p-1'
         >
-          <span className='truncate'>{initialData.title}</span>
+          <span className='truncate'>{document.title}</span>
         </Button>
       )}
     </div>
   );
+};
+
+Title.Skeleton = function TitleSkeleton() {
+  return <Skeleton className='h-9 w-16 rounded-md' />;
 };

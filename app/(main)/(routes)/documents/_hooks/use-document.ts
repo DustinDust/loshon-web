@@ -35,7 +35,7 @@ export function useCreateDocument() {
   });
 }
 
-export function useUpdateDocument(document: Document) {
+export function useUpdateDocument(document: Pick<Document, 'id'>) {
   const { getToken } = useAuth();
   const baseURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/documents/${document.id}`;
 
