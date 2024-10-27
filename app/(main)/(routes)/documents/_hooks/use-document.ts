@@ -3,6 +3,7 @@ import useSWRMutation from 'swr/mutation';
 
 import { useClerkSWR, useMutateClerkSWR } from '@/hooks/use-clerk-swr';
 import { Document, HttpError } from '@/lib/types';
+import { getMutateKeyByDocument } from '@/lib/utils';
 
 export function useDocuments(parentId?: string) {
   let key = 'documents';
@@ -58,6 +59,33 @@ export function useUpdateDocument(document: Pick<Document, 'id'>) {
   };
   return useSWRMutation(`documents/${document.id}`, fetcher);
 }
+
+export const useArchiveDocument = (
+  document: Pick<Document, 'id' | 'parentDocumentId'>
+) => {
+  const { getToken } = useAuth();
+  const baseURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/documents/${document.id}`;
+  const key = getMutateKeyByDocument(document);
+
+  const fetcher = async (_: string, { arg }: { arg: RequestInit }) => {
+    const res = await fetch(baseURL, {
+      headers: {
+        Authorization: `Bearer ${await getToken()}`,
+        'Content-Type': 'application/json',
+      },
+      method: 'DELETE',
+      ...arg,
+    });
+    if (!res.ok) {
+      const err = new HttpError('Error archiving data');
+      err.status = res.status;
+      err.info = await res.json();
+      throw err;
+    }
+    return res.json();
+  };
+  return useSWRMutation(key, fetcher);
+};
 
 export const useRestoreDocument = () => {
   const { getToken } = useAuth();

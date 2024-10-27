@@ -6,6 +6,9 @@ import { Document } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { updateListById } from '@/lib/utils';
+import { useDocuments } from '../(routes)/documents/_hooks/use-document';
+import { useSWRConfig } from 'swr';
 
 interface TitleProps {
   document: Document;
@@ -16,6 +19,7 @@ export const Title = ({ document, onUpdate }: TitleProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState(document.title || 'Untitled');
+  const { data: documents } = useDocuments(document.parentDocumentId);
 
   const enableInput = () => {
     setTitle(document.title);
@@ -31,8 +35,28 @@ export const Title = ({ document, onUpdate }: TitleProps) => {
     onUpdate(title.trim());
   };
 
+  const { mutate } = useSWRConfig();
+
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
+    const updatedList = updateListById<Document>(
+      documents?.data || [],
+      document.id,
+      {
+        ...document,
+        title: event.target.value,
+      }
+    );
+    const mutateKey = `documents${
+      document.parentDocumentId
+        ? `?parentDocument=${document.parentDocumentId}`
+        : ''
+    }`;
+    mutate(
+      mutateKey,
+      { ...documents, data: updatedList },
+      { revalidate: false, populateCache: true }
+    );
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {

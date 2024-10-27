@@ -13,6 +13,8 @@ import {
   useDeleteDocument,
   useRestoreDocument,
 } from '../(routes)/documents/_hooks/use-document';
+import { Document } from '@/lib/types';
+import { getMutateKeyByDocument } from '@/lib/utils';
 
 export const TrashBox = () => {
   const router = useRouter();
@@ -31,17 +33,17 @@ export const TrashBox = () => {
     router.push(`/documents/${documentId}`);
   };
 
-  const onRestore = (event: React.MouseEvent, documentId: string) => {
+  const onRestore = (event: React.MouseEvent, document: Document) => {
     event.stopPropagation();
 
     const loadingToast = toast.loading('Restoring...');
     triggerRestore(
-      { documentId: documentId },
+      { documentId: document.id },
       {
         onSuccess: () => {
           toast.dismiss(loadingToast);
           toast.success('Success!', { duration: 3000 });
-          mutate('document');
+          mutate(getMutateKeyByDocument(document));
         },
         onError: (err) => {
           console.log(err);
@@ -100,7 +102,7 @@ export const TrashBox = () => {
               <span className='truncate pl-2'>{document.title}</span>
               <div className='flex items-center'>
                 <div
-                  onClick={(e) => onRestore(e, document.id)}
+                  onClick={(e) => onRestore(e, document)}
                   role='button'
                   className='rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600'
                 >

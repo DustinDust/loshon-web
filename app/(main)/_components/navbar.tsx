@@ -9,6 +9,7 @@ import {
 import { MenuIcon } from 'lucide-react';
 import { Title } from './title';
 import { useSWRConfig } from 'swr';
+import { Banner } from './banner';
 
 interface NavBarProps {
   isCollapsed: boolean;
@@ -80,6 +81,7 @@ export const NavBar = ({ isCollapsed, onResetWidth }: NavBarProps) => {
           <Title document={document.data} onUpdate={onUpdateTitle} />
         </div>
       </nav>
+      {document.data.isArchived && <Banner document={document.data} />}
     </>
   );
 };

@@ -20,8 +20,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMutateClerkSWR } from '@/hooks/use-clerk-swr';
-import { CreateDocument, Document } from '@/lib/types';
+import { CreateDocument, Document, TResponse } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { useArchiveDocument } from '../(routes)/documents/_hooks/use-document';
+import { useRouter } from 'next/navigation';
 
 interface ItemProps {
   id?: string;
@@ -51,6 +53,7 @@ export const Item = ({
   onClick,
 }: ItemProps) => {
   const { user } = useUser();
+  const router = useRouter();
   const handleExpand = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -76,13 +79,13 @@ export const Item = ({
         parentDocumentId: id,
       },
       {
-        onSuccess(data: Document) {
+        onSuccess(data: TResponse<Document>) {
           if (!expanded) {
             onExpand?.();
           }
 
           console.log(data);
-          // router.push(`documents/${data.id}`);
+          router.push(`/documents/${data.data.id}`);
           toast.success('Success!', {
             duration: 3000,
           });
@@ -97,11 +100,10 @@ export const Item = ({
     );
   };
 
-  const { trigger: triggerArchive } = useMutateClerkSWR(
-    `document${parentId ? `/${parentId}` : ''}`,
-    `document/${id}`,
-    { method: 'DELETE' }
-  );
+  const { trigger: triggerArchive } = useArchiveDocument({
+    id: id || '',
+    parentDocumentId: parentId,
+  });
 
   const onDelete = (event: React.MouseEvent) => {
     event.stopPropagation();
