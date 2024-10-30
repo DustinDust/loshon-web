@@ -179,7 +179,7 @@ export const Navigation = () => {
         <div className='mt-4'>
           <DocumentList />
           <Item onClick={handleCreate} icon={Plus} label='Add a page' />
-          <Popover>
+          <Popover modal>
             <PopoverTrigger className='w-full mt-4'>
               <Item label='Trash' icon={Trash} />
             </PopoverTrigger>

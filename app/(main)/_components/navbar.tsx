@@ -10,6 +10,7 @@ import { MenuIcon } from 'lucide-react';
 import { Title } from './title';
 import { useSWRConfig } from 'swr';
 import { Banner } from './banner';
+import { Menu } from './menu';
 
 interface NavBarProps {
   isCollapsed: boolean;
@@ -18,6 +19,7 @@ interface NavBarProps {
 
 export const NavBar = ({ isCollapsed, onResetWidth }: NavBarProps) => {
   const params = useParams();
+
   const { data: document, isLoading } = useDocument(
     params.documentId as string
   );
@@ -28,8 +30,11 @@ export const NavBar = ({ isCollapsed, onResetWidth }: NavBarProps) => {
 
   if (isLoading) {
     return (
-      <nav className='bg-background dark:bg-[#1F1F1F] px-3 py-2 w-full flex items-center gap-x-4'>
+      <nav className='bg-background dark:bg-[#1F1F1F] px-3 py-2 w-full flex items-center justify-between gap-x-4'>
         <Title.Skeleton />
+        <div className='flex items gap-x-2'>
+          <Menu.Skeleton />
+        </div>
       </nav>
     );
   }
@@ -61,8 +66,11 @@ export const NavBar = ({ isCollapsed, onResetWidth }: NavBarProps) => {
 
   if (!document || !document.data) {
     return (
-      <nav className='bg-background dark:bg-[#1F1F1F] px-3 py-2 w-full flex items-center gap-x-4'>
+      <nav className='bg-background dark:bg-[#1F1F1F] px-3 py-2 w-full flex justify-between items-center gap-x-4 '>
         <Title.Skeleton />
+        <div className='flex items-center gap-x-2'>
+          <Menu.Skeleton />
+        </div>
       </nav>
     );
   }
@@ -79,6 +87,9 @@ export const NavBar = ({ isCollapsed, onResetWidth }: NavBarProps) => {
         )}
         <div className='flex items-center justify-between w-full'>
           <Title document={document.data} onUpdate={onUpdateTitle} />
+          <div className='flex items-center gap-x-2'>
+            <Menu document={document.data} />
+          </div>
         </div>
       </nav>
       {document.data.isArchived && <Banner document={document.data} />}

@@ -24,6 +24,7 @@ import { CreateDocument, Document, TResponse } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useArchiveDocument } from '../(routes)/documents/_hooks/use-document';
 import { useRouter } from 'next/navigation';
+import { useSWRConfig } from 'swr';
 
 interface ItemProps {
   id?: string;
@@ -60,6 +61,8 @@ export const Item = ({
     event.stopPropagation();
     onExpand?.();
   };
+
+  const { mutate } = useSWRConfig();
 
   const { trigger: triggerCreateChild } = useMutateClerkSWR<CreateDocument>(
     `documents?parentDocument=${id}`,
@@ -115,6 +118,7 @@ export const Item = ({
         onSuccess() {
           toast.success(`Success!`, { duration: 3000 });
           toast.dismiss(loadingToast);
+          mutate(`documents/${id}`);
         },
         onError(err) {
           console.log(err);
@@ -176,7 +180,7 @@ export const Item = ({
             >
               <DropdownMenuItem onClick={onDelete}>
                 <TrashIcon className='w-4 h-4 mr-2' />
-                Delete
+                Move to trash
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <div className='text-xs text-muted-foreground p-2'>

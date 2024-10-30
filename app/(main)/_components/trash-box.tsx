@@ -44,6 +44,7 @@ export const TrashBox = () => {
           toast.dismiss(loadingToast);
           toast.success('Success!', { duration: 3000 });
           mutate(getMutateKeyByDocument(document));
+          mutate(`documents/${document.id}`);
         },
         onError: (err) => {
           console.log(err);
