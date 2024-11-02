@@ -2,24 +2,21 @@
 
 import { useRef, useState } from 'react';
 
-import { Document } from '@/lib/types';
+import { Document, UpdateDocument } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { updateListById } from '@/lib/utils';
-import { useDocuments } from '../(routes)/documents/_hooks/use-document';
-import { useSWRConfig } from 'swr';
 
 interface TitleProps {
   document: Document;
   onUpdate: (title: string) => void;
+  onChange: (data: UpdateDocument) => void;
 }
 
-export const Title = ({ document, onUpdate }: TitleProps) => {
+export const Title = ({ document, onUpdate, onChange }: TitleProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState(document.title || 'Untitled');
-  const { data: documents } = useDocuments(document.parentDocumentId);
 
   const enableInput = () => {
     setTitle(document.title);
@@ -32,31 +29,12 @@ export const Title = ({ document, onUpdate }: TitleProps) => {
 
   const disableInputAndSubmit = () => {
     setIsEditing(false);
-    onUpdate(title.trim());
+    onUpdate(title.trim() || 'Untitled');
   };
 
-  const { mutate } = useSWRConfig();
-
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
-    const updatedList = updateListById<Document>(
-      documents?.data || [],
-      document.id,
-      {
-        ...document,
-        title: event.target.value,
-      }
-    );
-    const mutateKey = `documents${
-      document.parentDocumentId
-        ? `?parentDocument=${document.parentDocumentId}`
-        : ''
-    }`;
-    mutate(
-      mutateKey,
-      { ...documents, data: updatedList },
-      { revalidate: false, populateCache: true }
-    );
+    onChange({ title: event.target.value || 'Untitled' });
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -73,10 +51,11 @@ export const Title = ({ document, onUpdate }: TitleProps) => {
           ref={inputRef}
           onClick={enableInput}
           onBlur={disableInputAndSubmit}
-          onChange={onChange}
+          onChange={handleChange}
           onKeyDown={onKeyDown}
           value={title}
           className='h-7 px-2 focus-visible:ring-transparent'
+          placeholder='Untitled'
         />
       ) : (
         <Button
