@@ -25,7 +25,7 @@ export function useDocument(id: string) {
 
 export const useArchivesDocument = () => {
   const key = 'archives/documents';
-  const path = 'archives/documents';
+  const path = 'documents/_archives';
 
   return useClerkSWR<Document[]>(key, path);
 };
@@ -50,7 +50,7 @@ export function useUpdateDocument(document: Pick<Document, 'id'>) {
       ...arg,
     });
     if (!res.ok) {
-      const err = new HttpError('Error restoring data');
+      const err = new HttpError('Error updating data');
       err.status = res.status;
       err.info = await res.json();
       throw err;
@@ -89,7 +89,7 @@ export const useArchiveDocument = (
 
 export const useRestoreDocument = () => {
   const { getToken } = useAuth();
-  const baseURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/archives/documents`;
+  const baseURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/documents/_restore`;
 
   const fetcher = async (
     _: string,
@@ -116,7 +116,7 @@ export const useRestoreDocument = () => {
 
 export const useDeleteDocument = () => {
   const { getToken } = useAuth();
-  const baseURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/archives/documents`;
+  const baseURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/documents/_delete`;
   const fetcher = async (
     _: string,
     { arg }: { arg: { documentId: string } }

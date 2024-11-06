@@ -29,14 +29,14 @@ import { useDocumentsStore } from '@/hooks/use-documents-store';
 
 interface ItemProps {
   id?: string;
-  documentIcon?: string;
+  documentIcon?: string | null;
   active?: boolean;
   expanded?: boolean;
   isSearch?: boolean;
   level?: number;
   label: string;
   icon: LucideIcon;
-  parentId?: string;
+  parentId?: string | null;
   onExpand?: () => void;
   onClick?: () => void;
 }
@@ -45,7 +45,6 @@ export const Item = ({
   label,
   icon: Icon,
   active,
-  documentIcon,
   expanded,
   id,
   isSearch,
@@ -152,7 +151,7 @@ export const Item = ({
           <ChevronIcon className='h-4 w-4 shrink-0 text-muted-foreground/50' />
         </div>
       )}
-      {documentIcon ? (
+      {id && documentsStore[id]?.icon ? (
         <div className='shrink-0 mr-2 text-[18px]'>
           {id && documentsStore[id].icon}
         </div>

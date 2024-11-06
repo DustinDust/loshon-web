@@ -19,6 +19,7 @@ export const useDocumentsStore = create<DocumentStores>((set, get) => {
       if (store[id]) {
         store[id] = { ...store[id], ...data };
       }
+      console.log(store[id]);
       set(() => ({ store: store }));
     },
     insertDocument: (data) => {

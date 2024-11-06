@@ -24,7 +24,7 @@ export const DocumentList = ({
   const router = useRouter();
 
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-  const { insertDocument, totalCount } = useDocumentsStore();
+  const { insertDocument } = useDocumentsStore();
 
   const onExpanded = (documentId: string) => {
     setExpanded((prevExpanded) => {
@@ -47,7 +47,7 @@ export const DocumentList = ({
     router.push(`/documents/${documentId}`);
   };
 
-  if (isLoading || !data?.data || !totalCount) {
+  if (isLoading || !data?.data) {
     return (
       <>
         <Item.Skeleton level={level} />

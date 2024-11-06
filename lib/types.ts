@@ -3,10 +3,10 @@ export type Document = {
   title: string;
   userId: string;
   isArchived: boolean;
-  parentDocumentId?: string;
+  parentDocumentId?: string | null;
   content?: string;
-  coverImage?: string;
-  icon?: string;
+  coverImage?: string | null;
+  icon?: string | null;
   isPublished?: boolean;
   createdAt: Date;
   updatedAt?: Date;

@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 
 import { ThemeProvider } from '../components/providers/theme-provider';
 import { ModalProvider } from '@/components/providers/modal-provider';
+import { EdgeStoreProvider } from '@/lib/edgestore';
 
 import './globals.css';
 
@@ -40,16 +41,18 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang='en'>
         <body className={`${poppins.className}`}>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='system'
-            enableSystem
-            disableTransitionOnChange
-          >
-            <ModalProvider />
-            <Toaster position='top-center' closeButton />
-            {children}
-          </ThemeProvider>
+          <EdgeStoreProvider>
+            <ThemeProvider
+              attribute='class'
+              defaultTheme='system'
+              enableSystem
+              disableTransitionOnChange
+            >
+              <ModalProvider />
+              <Toaster position='top-center' closeButton />
+              {children}
+            </ThemeProvider>
+          </EdgeStoreProvider>
         </body>
       </html>
     </ClerkProvider>
