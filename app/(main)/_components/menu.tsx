@@ -36,8 +36,7 @@ export const Menu = ({ document }: MenuProps) => {
           toast.dismiss(loadingToast);
           toast.error(`Error: ${err.message}`);
         },
-        onSuccess: (data) => {
-          console.log(data);
+        onSuccess: () => {
           toast.dismiss(loadingToast);
           toast.success('Success!');
           router.push('/documents');

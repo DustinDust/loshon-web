@@ -88,7 +88,6 @@ export const Item = ({
             onExpand?.();
           }
 
-          console.log(data);
           router.push(`/documents/${data.data.id}`);
           toast.success('Success!', {
             duration: 3000,

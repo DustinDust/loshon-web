@@ -30,8 +30,7 @@ export const Banner = ({ document }: BannerProps) => {
     triggerDelete(
       { documentId: document.id },
       {
-        onSuccess: (data) => {
-          console.log(data);
+        onSuccess: () => {
           toast.dismiss(loadingToast);
           toast.success('Success!');
           router.push('/documents');
@@ -50,8 +49,7 @@ export const Banner = ({ document }: BannerProps) => {
     triggerRestore(
       { documentId: document.id },
       {
-        onSuccess: (data) => {
-          console.log(data);
+        onSuccess: () => {
           toast.dismiss(loadingToast);
           toast.success('Success!');
           mutate(getMutateKeyByDocument(document));

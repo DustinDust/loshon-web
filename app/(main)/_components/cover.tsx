@@ -3,14 +3,15 @@
 import { ImageIcon, X } from 'lucide-react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
+import { toast } from 'sonner';
 
 import { useUpdateDocument } from '../(routes)/documents/_hooks/use-document';
 import { Button } from '@/components/ui/button';
 import { useCoverImage } from '@/hooks/use-cover-image';
 import { cn } from '@/lib/utils';
 import { HttpError } from '@/lib/types';
-import { toast } from 'sonner';
 import { useEdgeStore } from '@/lib/edgestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface CoverImageProps {
   url?: string | null;
@@ -75,6 +76,14 @@ export const Cover = ({ url, preview }: CoverImageProps) => {
           </Button>
         </div>
       )}
+    </div>
+  );
+};
+
+Cover.Skeleton = function CoverSkeleton() {
+  return (
+    <div>
+      <Skeleton className='w-full h-[12vh]' />
     </div>
   );
 };

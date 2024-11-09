@@ -9,7 +9,7 @@ import {
   Settings,
   Trash,
 } from 'lucide-react';
-import { useParams, usePathname } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import React, { ElementRef, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 import { useUser } from '@clerk/nextjs';
@@ -29,12 +29,14 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { NavBar } from './navbar';
+import { Document, TResponse } from '@/lib/types';
 
 export const Navigation = () => {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const params = useParams();
   const pathname = usePathname();
   const { user } = useUser();
+  const router = useRouter();
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<'aside'>>(null);
@@ -137,10 +139,11 @@ export const Navigation = () => {
         isPublished: false,
       },
       {
-        onSuccess: (data) => {
+        onSuccess: (data: TResponse<Document>) => {
+          console.log(data);
           toast.dismiss(loadingToast);
-          console.log('data', data);
           toast.success('Success');
+          router.push(`/documents/${data.data.id}`, { scroll: true });
         },
         onError: (err) => {
           toast.dismiss(loadingToast);

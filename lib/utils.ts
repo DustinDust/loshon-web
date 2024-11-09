@@ -12,7 +12,6 @@ export function updateListById<T extends { id: string }>(
   newData: T
 ): T[] {
   const index = list.findIndex((item) => item.id === id);
-  console.log(index);
   if (index < 0) {
     return list;
   }

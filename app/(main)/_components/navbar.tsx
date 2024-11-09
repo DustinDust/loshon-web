@@ -2,9 +2,12 @@
 
 import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
-
-import { useUpdateDocument } from '../(routes)/documents/_hooks/use-document';
 import { MenuIcon } from 'lucide-react';
+
+import {
+  useDocument,
+  useUpdateDocument,
+} from '../(routes)/documents/_hooks/use-document';
 import { Title } from './title';
 import { Banner } from './banner';
 import { Menu } from './menu';
@@ -19,6 +22,7 @@ interface NavBarProps {
 
 export const NavBar = ({ isCollapsed, onResetWidth }: NavBarProps) => {
   const params = useParams();
+  const { isLoading, error } = useDocument(params.documentId as string);
   const { currentDocument, patchCurrent } = useCurrentDocument();
   const { updateById } = useDocumentsStore();
 
@@ -26,7 +30,11 @@ export const NavBar = ({ isCollapsed, onResetWidth }: NavBarProps) => {
     currentDocument || { id: params.documentId as string }
   );
 
-  if (!currentDocument) {
+  if (error && !isLoading) {
+    return null;
+  }
+
+  if (!currentDocument || isLoading) {
     return (
       <nav className='bg-background dark:bg-[#1F1F1F] px-3 py-2 w-full flex items-center justify-between gap-x-4'>
         <Title.Skeleton />
