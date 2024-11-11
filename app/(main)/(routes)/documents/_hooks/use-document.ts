@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation';
 import { useClerkSWR, useMutateClerkSWR } from '@/hooks/use-clerk-swr';
 import { Document, HttpError } from '@/lib/types';
 import { getMutateKeyByDocument } from '@/lib/utils';
+import { SWRConfiguration } from 'swr';
 
 export function useDocuments(parentId?: string) {
   let key = 'documents';
@@ -16,11 +17,11 @@ export function useDocuments(parentId?: string) {
   return useClerkSWR<Document[]>(key, path);
 }
 
-export function useDocument(id: string) {
+export function useDocument(id: string, options: SWRConfiguration = {}) {
   const key = `documents/${id}`;
   const path = `documents/${id}`;
 
-  return useClerkSWR<Document>(key, path);
+  return useClerkSWR<Document>(key, path, {}, options);
 }
 
 export const useArchivesDocument = () => {

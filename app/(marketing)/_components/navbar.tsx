@@ -22,8 +22,8 @@ export const NavBar = () => {
   return (
     <div
       className={cn(
-        'z-50 bg-background fixed top-0 flex items-center w-full px-6 py-2 dark:bg-[--background]',
-        scrolled && 'border-b shadow-sm bg-white'
+        'z-50 bg-background fixed top-0 flex items-center w-full px-6 py-2 dark:bg-[--background] transition-colors',
+        scrolled && 'border-b shadow-sm bg-white dark:bg-background'
       )}
     >
       <Logo />
@@ -32,7 +32,12 @@ export const NavBar = () => {
         {isLoaded && !isSignedIn && (
           <>
             <SignInButton mode='modal'>
-              <Button variant='ghost'>Sign-in</Button>
+              <Button
+                variant='ghost'
+                className='bg-white dark:bg-[--background]'
+              >
+                Sign-in
+              </Button>
             </SignInButton>
             <SignUpButton mode='modal'>
               <Button size='sm'>Join for free</Button>

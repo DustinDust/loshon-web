@@ -14,6 +14,7 @@ import { Menu } from './menu';
 import { HttpError, UpdateDocument } from '@/lib/types';
 import { useCurrentDocument } from '@/hooks/use-current-document';
 import { useDocumentsStore } from '@/hooks/use-documents-store';
+import { Publish } from './publish';
 
 interface NavBarProps {
   isCollapsed: boolean;
@@ -22,7 +23,11 @@ interface NavBarProps {
 
 export const NavBar = ({ isCollapsed, onResetWidth }: NavBarProps) => {
   const params = useParams();
-  const { isLoading, error } = useDocument(params.documentId as string);
+  const { isLoading, error } = useDocument(params.documentId as string, {
+    refreshInterval: 0,
+    shouldRetryOnError: false,
+    revalidateIfStale: false,
+  });
   const { currentDocument, patchCurrent } = useCurrentDocument();
   const { updateById } = useDocumentsStore();
 
@@ -81,6 +86,7 @@ export const NavBar = ({ isCollapsed, onResetWidth }: NavBarProps) => {
             onChange={onChange}
           />
           <div className='flex items-center gap-x-2'>
+            <Publish document={currentDocument} onChange={onChange} />
             <Menu document={currentDocument} />
           </div>
         </div>

@@ -155,7 +155,7 @@ export const Item = ({
           {id && documentsStore[id].icon}
         </div>
       ) : (
-        <Icon className='shrink-0 h-[18px] mr-2' />
+        <Icon className='shrink-0 w-[18px] h-[18px] mr-2' />
       )}
       <span className='truncate'>
         {id ? documentsStore[id] && documentsStore[id].title : label}

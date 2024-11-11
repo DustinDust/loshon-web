@@ -4,14 +4,13 @@ import dynamic from 'next/dynamic';
 import { useEffect, useMemo } from 'react';
 
 import { Toolbar } from '@/app/(main)/_components/toolbar';
-import { useDocument, useUpdateDocument } from '../_hooks/use-document';
-import { HttpError, UpdateDocument } from '@/lib/types';
+import { useDocument } from '@/app/(main)/(routes)/documents/_hooks/use-document';
 import { useCurrentDocument } from '@/hooks/use-current-document';
-import { useDocumentsStore } from '@/hooks/use-documents-store';
 import { Cover } from '@/app/(main)/_components/cover';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Error } from '@/components/error';
 import { NotFound } from '@/components/not-found';
+import { NavBar } from '@/app/(marketing)/_components/navbar';
 
 interface DocumentIdPageProps {
   params: {
@@ -29,8 +28,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     refreshInterval: 0,
     revalidateIfStale: false,
   });
-  const { setCurrent, patchCurrent, currentDocument } = useCurrentDocument();
-  const { updateById } = useDocumentsStore();
+  const { setCurrent, currentDocument } = useCurrentDocument();
   const Editor = useMemo(
     () => dynamic(() => import('@/components/editor'), { ssr: false }),
     []
@@ -41,11 +39,6 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
       setCurrent(remoteDocumentResponse.data);
     }
   }, [remoteDocumentResponse, isLoading, error, setCurrent]);
-
-  const { trigger: triggerUpdate } = useUpdateDocument(
-    currentDocument || { id: params.documentId }
-  );
-
   if (isLoading) {
     return (
       <div>
@@ -72,44 +65,18 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     return <NotFound />;
   }
 
-  const onUpdate = (data: UpdateDocument) => {
-    if (data.title === remoteDocumentResponse.data.title) {
-      return;
-    }
-    triggerUpdate(
-      {
-        body: JSON.stringify({ ...data }),
-      },
-      {
-        optimisticData: { data: { ...currentDocument, ...data } },
-        onError: (error: HttpError) => {
-          console.log(error);
-        },
-        rollbackOnError: true,
-      }
-    );
-  };
-
-  const onChange = (data: UpdateDocument) => {
-    patchCurrent(data);
-    updateById(currentDocument.id, data);
-  };
-
-  const onEditorContentChange = (content: string) => {
-    onChange({ content: content });
-    onUpdate({ content: content });
-  };
-
   return (
     <div className='pb-40'>
-      <Cover url={currentDocument.coverImage} />
+      <NavBar />
+      <Cover url={currentDocument.coverImage} preview />
       <div className='md-max-w-3xl lg:max-w-4xl mx-auto'>
         <Toolbar
           document={currentDocument}
-          onUpdate={onUpdate}
-          onChange={onChange}
+          onUpdate={() => {}}
+          onChange={() => {}}
+          preview
         />
-        <Editor onChange={onEditorContentChange} />
+        <Editor onChange={() => {}} editable={false} />
       </div>
     </div>
   );
