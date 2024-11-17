@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import '@blocknote/mantine/style.css';
 
 interface EditorProps {
-  onChange: (value: string) => void;
+  onChange: (content: string, mdContent: string) => void;
   editable?: boolean;
 }
 
@@ -43,13 +43,17 @@ const Editor = ({ onChange, editable }: EditorProps) => {
     [currentDocument?.id]
   );
 
-  const debouncedContentChange = useDebounceCallback((blocks) => {
-    onChange(JSON.stringify(blocks));
-  }, 1000);
+  const debouncedContentChange = useDebounceCallback(
+    (content: string, mdContent: string) => {
+      onChange(content, mdContent);
+    },
+    1000
+  );
 
-  const onContentChange = () => {
+  const onContentChange = async () => {
     const blocks = editor.document;
-    debouncedContentChange(blocks);
+    const mdContent = await editor.blocksToMarkdownLossy(blocks);
+    debouncedContentChange(JSON.stringify(blocks), mdContent);
   };
 
   return (

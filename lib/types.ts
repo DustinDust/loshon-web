@@ -5,6 +5,7 @@ export type Document = {
   isArchived: boolean;
   parentDocumentId?: string | null;
   content?: string;
+  mdContent?: string;
   coverImage?: string | null;
   icon?: string | null;
   isPublished?: boolean;
@@ -23,6 +24,7 @@ export type UpdateDocument = Partial<
     | 'title'
     | 'icon'
     | 'isPublished'
+    | 'mdContent'
   >
 >;
 

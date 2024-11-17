@@ -95,9 +95,9 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     updateById(currentDocument.id, data);
   };
 
-  const onEditorContentChange = (content: string) => {
+  const onEditorContentChange = (content: string, mdContent: string) => {
     onChange({ content: content });
-    onUpdate({ content: content });
+    onUpdate({ content: content, mdContent: mdContent });
   };
 
   return (
