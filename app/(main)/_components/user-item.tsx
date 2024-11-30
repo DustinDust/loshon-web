@@ -1,7 +1,8 @@
 'use client';
+import { ChevronsLeftRightIcon } from 'lucide-react';
+import { SignOutButton, useUser } from '@clerk/nextjs';
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { SignOutButton, useUser } from '@clerk/nextjs';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ChevronsLeftRightIcon } from 'lucide-react';
 
 export const UserItem = () => {
   const { user } = useUser();

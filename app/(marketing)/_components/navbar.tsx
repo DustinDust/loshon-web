@@ -1,21 +1,19 @@
 'use client';
 
-import { useScrollTop } from '@/hooks/use-scroll-top';
-import { cn } from '@/lib/utils';
-import Logo from './logo';
-import { ModeToggle } from '@/components/mode-toggle';
 import {
   SignInButton,
   SignUpButton,
   UserButton,
   useSession,
 } from '@clerk/nextjs';
+import Link from 'next/link';
+
+import { useScrollTop } from '@/hooks/use-scroll-top';
+import { cn } from '@/lib/utils';
+import Logo from './logo';
+import { ModeToggle } from '@/components/mode-toggle';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/spinner';
-import Link from 'next/link';
-// import { Button } from '@/components/ui/button';
-// import { Spinner } from '@/components/spinner';
-// import Link from 'next/link';
 
 export const NavBar = () => {
   const scrolled = useScrollTop();
@@ -24,8 +22,8 @@ export const NavBar = () => {
   return (
     <div
       className={cn(
-        'z-50 bg-background fixed top-0 flex items-center w-full px-6 py-2 dark:bg-[--background]',
-        scrolled && 'border-b shadow-sm bg-white'
+        'z-50 bg-background fixed top-0 flex items-center w-full px-6 py-2 dark:bg-[--background] transition-colors',
+        scrolled && 'border-b shadow-sm bg-white dark:bg-background'
       )}
     >
       <Logo />
@@ -34,7 +32,12 @@ export const NavBar = () => {
         {isLoaded && !isSignedIn && (
           <>
             <SignInButton mode='modal'>
-              <Button variant='ghost'>Sign-in</Button>
+              <Button
+                variant='ghost'
+                className='bg-white dark:bg-[--background]'
+              >
+                Sign-in
+              </Button>
             </SignInButton>
             <SignUpButton mode='modal'>
               <Button size='sm'>Join for free</Button>

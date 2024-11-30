@@ -2,22 +2,28 @@
 
 import Image from 'next/image';
 import { useUser } from '@clerk/nextjs';
-import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
-import { useCreateDocument } from './_hooks/use-document';
 import { toast } from 'sonner';
+
+import { Button } from '@/components/ui/button';
+import { useCreateDocument } from './_hooks/use-document';
+import { Document, TResponse } from '@/lib/types';
+import { useRouter } from 'next/navigation';
 
 const DocumentPage = () => {
   const { user } = useUser();
+  const router = useRouter();
   const { trigger: triggerCreate } = useCreateDocument();
+
   const handleCreate = () => {
     const loadingToast = toast.loading('Creating note...');
     triggerCreate(
       { title: 'Untitled', isArchived: false, isPublished: false },
       {
-        onSuccess: () => {
+        onSuccess: (data: TResponse<Document>) => {
           toast.dismiss(loadingToast);
           toast.success('Success!');
+          router.push(`/documents/${data.data.id}`);
         },
         onError: (err) => {
           console.log(err);

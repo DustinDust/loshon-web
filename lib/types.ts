@@ -3,15 +3,30 @@ export type Document = {
   title: string;
   userId: string;
   isArchived: boolean;
-  parentId?: string;
+  parentDocumentId?: string | null;
   content?: string;
-  coverImage?: string;
-  icon?: string;
+  mdContent?: string;
+  coverImage?: string | null;
+  icon?: string | null;
   isPublished?: boolean;
   createdAt: Date;
   updatedAt?: Date;
   deletedAt?: Date;
 };
+
+export type CreateDocument = Partial<Document>;
+export type UpdateDocument = Partial<
+  Pick<
+    Document,
+    | 'content'
+    | 'coverImage'
+    | 'parentDocumentId'
+    | 'title'
+    | 'icon'
+    | 'isPublished'
+    | 'mdContent'
+  >
+>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class HttpError<T = any> extends Error {
@@ -24,3 +39,10 @@ export class HttpError<T = any> extends Error {
     this.status = status;
   }
 }
+
+export type TResponse<T> = {
+  data: T;
+  total?: number;
+  page?: number;
+  pageSize?: number;
+};

@@ -1,9 +1,13 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import { ThemeProvider } from './theme-provider';
-import { ClerkProvider } from '@clerk/nextjs';
 import { Poppins } from 'next/font/google';
 import { Toaster } from 'sonner';
+import { ClerkProvider } from '@clerk/nextjs';
+import type { Metadata } from 'next';
+
+import { ThemeProvider } from '../components/providers/theme-provider';
+import { ModalProvider } from '@/components/providers/modal-provider';
+import { EdgeStoreProvider } from '@/lib/edgestore';
+
+import './globals.css';
 
 export const metadata: Metadata = {
   title: "Lo'shon",
@@ -37,15 +41,18 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang='en'>
         <body className={`${poppins.className}`}>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='system'
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Toaster position='top-center' />
-            {children}
-          </ThemeProvider>
+          <EdgeStoreProvider>
+            <ThemeProvider
+              attribute='class'
+              defaultTheme='system'
+              enableSystem
+              disableTransitionOnChange
+            >
+              <ModalProvider />
+              <Toaster position='top-center' closeButton />
+              {children}
+            </ThemeProvider>
+          </EdgeStoreProvider>
         </body>
       </html>
     </ClerkProvider>
