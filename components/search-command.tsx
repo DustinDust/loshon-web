@@ -59,9 +59,11 @@ export const SearchCommand = () => {
     return null;
   }
 
+  const indexName = `${process.env.NEXT_PUBLIC_NODE_ENV}_documents`;
+
   return (
     <CommandDialog open={isOpen} onOpenChange={onClose}>
-      <InstantSearch searchClient={searchClient} indexName='documents'>
+      <InstantSearch searchClient={searchClient} indexName={indexName}>
         <Configure facetFilters={[`userId:${user?.id}`, 'isDeleted:false']} />
         <SearchBox />
         <CommandList>
