@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { File, Search } from 'lucide-react';
+import { CircleAlert, File, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { liteClient as agoliaSearch } from 'algoliasearch/lite';
@@ -9,9 +10,11 @@ import {
   Configure,
   Hits,
   InstantSearch,
+  useInstantSearch,
   useSearchBox,
   UseSearchBoxProps,
 } from 'react-instantsearch';
+import { Hit } from 'algoliasearch';
 
 import { useSearch } from '@/hooks/use-search';
 import {
@@ -22,9 +25,9 @@ import {
   CommandEmpty,
 } from '@/components/ui/command';
 import { Document } from '@/lib/types';
-import { Hit } from 'algoliasearch';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
+import { Spinner } from './spinner';
 
 export const SearchCommand = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -62,41 +65,110 @@ export const SearchCommand = () => {
   const indexName = `${process.env.NEXT_PUBLIC_NODE_ENV}_documents`;
 
   return (
-    <CommandDialog open={isOpen} onOpenChange={onClose}>
+    <CommandDialog
+      open={isOpen}
+      onOpenChange={onClose}
+      contentClassName='max-w-[100%] md:max-w-[768px] h-[570px]'
+    >
       <InstantSearch searchClient={searchClient} indexName={indexName}>
-        <Configure facetFilters={[`userId:${user?.id}`, 'isDeleted:false']} />
+        <Configure
+          highlightPreTag='<span class="font-bold">'
+          highlightPostTag='</span>'
+          facetFilters={[`userId:${user?.id}`, 'isDeleted:false']}
+        />
         <SearchBox />
-        <CommandList>
-          <CommandEmpty>No result found.</CommandEmpty>
-          <CommandGroup heading='Results'>
-            <Hits hitComponent={HitComponent} />
-          </CommandGroup>
-        </CommandList>
+        <SearchResult />
       </InstantSearch>
     </CommandDialog>
   );
 };
 
+const SearchResult = () => {
+  const { status } = useInstantSearch();
+  const { previewItem } = useSearch();
+
+  return (
+    <>
+      <CommandList className='max-h-[570px] min-h-[570px]'>
+        <CommandEmpty>
+          {status === 'stalled' || status === 'loading' ? (
+            <div className='flex justify-center items-center'>
+              <Spinner size={'lg'} />
+            </div>
+          ) : (
+            'No results found'
+          )}
+          {status === 'error' && (
+            <div className='flex justify-center items-center text-rose-800 text-lg'>
+              <CircleAlert className='mr-2 h-4 w-4' />
+              Uh oh...
+            </div>
+          )}
+        </CommandEmpty>
+        <div className='flex flex-row'>
+          <CommandGroup heading='Results' className='flex-[2] pb-2'>
+            <Hits hitComponent={HitComponent} />
+          </CommandGroup>
+          {previewItem && (
+            <div className='flex-[1] hidden sm:block '>Preview</div>
+          )}
+        </div>
+      </CommandList>
+    </>
+  );
+};
+
 const HitComponent = ({ hit }: { hit: Hit<Document> }) => {
+  const { setPreviewItem } = useSearch();
   const router = useRouter();
   const onClose = useSearch((store) => store.onClose);
   const select = () => {
     onClose();
     router.push(`/documents/${hit.objectID}`);
   };
+
+  const HighlightText = () => {
+    const contentHighlight = hit._highlightResult?.content as any;
+    const titleHighlight = hit._highlightResult?.title as any;
+
+    return (
+      <div>
+        {titleHighlight?.value && (
+          <p
+            className='text-[12px] text-muted-foreground'
+            dangerouslySetInnerHTML={{ __html: titleHighlight.value }}
+          ></p>
+        )}
+        {contentHighlight?.value && (
+          <p
+            className='text-[12px] text-muted-foreground text-nowrap whitespace-nowrap'
+            dangerouslySetInnerHTML={{ __html: contentHighlight.value }}
+          ></p>
+        )}
+      </div>
+    );
+  };
+
   return (
     <CommandItem
       key={hit.objectID}
       value={`${hit.objectID}-${hit.title}`}
       title={hit.title}
       onSelect={select}
+      onMouseEnter={() => setPreviewItem(hit)}
+      onMouseLeave={() => setPreviewItem(undefined)}
     >
-      {hit.icon ? (
-        <p className='mr-2 text-[18px]'>{hit.icon}</p>
-      ) : (
-        <File className='mr-2 h-4 w-4' />
-      )}
-      <span>{hit.title}</span>
+      <div className='flex flex-row items-start'>
+        {hit.icon ? (
+          <p className='mr-2 text-[16px]'>{hit.icon}</p>
+        ) : (
+          <File className='mr-2' />
+        )}
+        <div className='flex flex-col'>
+          <p className='text-xs'>{hit.title}</p>
+          <HighlightText />
+        </div>
+      </div>
       {hit.isArchived && (
         <Badge className='text-xs font-thin ml-2 bg-zinc-400' variant='default'>
           archived
