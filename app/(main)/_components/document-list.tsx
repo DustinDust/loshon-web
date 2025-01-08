@@ -9,7 +9,6 @@ import { Item } from './item';
 import { cn } from '@/lib/utils';
 import { useDocuments } from '../(routes)/documents/_hooks/use-document';
 import { useDocumentsStore } from '@/hooks/use-documents-store';
-import Link from 'next/link';
 
 interface DocumentListProps {
   parentDocumentId?: string;
@@ -59,43 +58,36 @@ export const DocumentList = ({
 
   return (
     <>
-      <>
-        <p
-          style={{ paddingLeft: !!level ? `${level * 12 + 25}px` : `12px` }}
-          className={cn(
-            'hidden text-sm font-medium text-muted-foreground/80',
-            expanded && 'last:block',
-            level === 0 && 'hidden'
-          )}
-        >
-          No pages inside
-        </p>
-        {data?.data?.map((document) => {
-          return (
-            <div key={document.id}>
-              <Link href={`/documents/${document.id}`}>
-                <Item
-                  id={document.id}
-                  label={document.title}
-                  icon={FileIcon}
-                  documentIcon={document.icon}
-                  active={params.documentId === document.id}
-                  onExpand={() => onExpanded(document.id)}
-                  expanded={expanded[document.id]}
-                  level={level}
-                  parentId={document.parentDocumentId}
-                />
-              </Link>
-              {expanded[document.id] && (
-                <DocumentList
-                  parentDocumentId={document.id}
-                  level={level + 1}
-                />
-              )}
-            </div>
-          );
-        })}
-      </>
+      <p
+        style={{ paddingLeft: !!level ? `${level * 12 + 25}px` : `12px` }}
+        className={cn(
+          'hidden text-sm font-medium text-muted-foreground/80',
+          expanded && 'last:block',
+          level === 0 && 'hidden'
+        )}
+      >
+        No pages inside
+      </p>
+      {data?.data?.map((document) => {
+        return (
+          <div key={document.id}>
+            <Item
+              id={document.id}
+              label={document.title}
+              icon={FileIcon}
+              documentIcon={document.icon}
+              active={params.documentId === document.id}
+              onExpand={() => onExpanded(document.id)}
+              expanded={expanded[document.id]}
+              level={level}
+              parentId={document.parentDocumentId}
+            />
+            {expanded[document.id] && (
+              <DocumentList parentDocumentId={document.id} level={level + 1} />
+            )}
+          </div>
+        );
+      })}
     </>
   );
 };
