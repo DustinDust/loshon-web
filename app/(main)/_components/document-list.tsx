@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FileIcon } from 'lucide-react';
 
@@ -9,6 +9,7 @@ import { Item } from './item';
 import { cn } from '@/lib/utils';
 import { useDocuments } from '../(routes)/documents/_hooks/use-document';
 import { useDocumentsStore } from '@/hooks/use-documents-store';
+import Link from 'next/link';
 
 interface DocumentListProps {
   parentDocumentId?: string;
@@ -21,7 +22,6 @@ export const DocumentList = ({
   level = 0,
 }: DocumentListProps) => {
   const params = useParams();
-  const router = useRouter();
 
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const { insertDocument } = useDocumentsStore();
@@ -42,10 +42,6 @@ export const DocumentList = ({
       data.data.forEach(insertDocument);
     }
   }, [data, isLoading, insertDocument]);
-
-  const onRedirect = (documentId: string) => {
-    router.push(`/documents/${documentId}`);
-  };
 
   if (isLoading || !data?.data) {
     return (
@@ -77,18 +73,19 @@ export const DocumentList = ({
         {data?.data?.map((document) => {
           return (
             <div key={document.id}>
-              <Item
-                id={document.id}
-                onClick={() => onRedirect(document.id)}
-                label={document.title}
-                icon={FileIcon}
-                documentIcon={document.icon}
-                active={params.documentId === document.id}
-                onExpand={() => onExpanded(document.id)}
-                expanded={expanded[document.id]}
-                level={level}
-                parentId={document.parentDocumentId}
-              />
+              <Link href={`/documents/${document.id}`}>
+                <Item
+                  id={document.id}
+                  label={document.title}
+                  icon={FileIcon}
+                  documentIcon={document.icon}
+                  active={params.documentId === document.id}
+                  onExpand={() => onExpanded(document.id)}
+                  expanded={expanded[document.id]}
+                  level={level}
+                  parentId={document.parentDocumentId}
+                />
+              </Link>
               {expanded[document.id] && (
                 <DocumentList
                   parentDocumentId={document.id}

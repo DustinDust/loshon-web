@@ -32,3 +32,21 @@ export function getMutateKeyByDocument(
       : ''
   }`;
 }
+
+export function formatHighlightedHits(content: string, padDot = false): string {
+  const matchedLine = content.split('\n').filter((line) => {
+    return line.indexOf('<mark>') !== -1 && line.indexOf('</mark>') !== -1;
+  });
+  if (matchedLine.length === 0) {
+    if (padDot) {
+      return content.substring(0, 50).trim() + '...';
+    } else {
+      return content.substring(0, 50);
+    }
+  }
+  const formatted = matchedLine[0]
+    .replace(/<mark>/g, '<span class="font-bold text-slate">')
+    .replace(/<\/mark>/g, '</span>');
+
+  return formatted;
+}

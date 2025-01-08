@@ -140,15 +140,14 @@ export const Navigation = () => {
       },
       {
         onSuccess: (data: TResponse<Document>) => {
-          console.log(data);
           toast.dismiss(loadingToast);
           toast.success('Success');
           router.push(`/documents/${data.data.id}`, { scroll: true });
         },
         onError: (err) => {
           toast.dismiss(loadingToast);
-          console.log('err', err);
-          toast.error('Error');
+          console.log(err);
+          toast.error('Error creating document');
         },
       }
     );
