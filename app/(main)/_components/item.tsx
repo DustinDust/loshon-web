@@ -51,7 +51,7 @@ export const Item = ({
   level = 0,
   parentId = '',
   onExpand,
-  onClick,
+  onClick = () => {},
 }: ItemProps) => {
   const { user } = useUser();
   const { store: documentsStore } = useDocumentsStore();

@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { CircleAlert, File, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Markdown from 'react-markdown';
 import { useUser } from '@clerk/nextjs';
 import { liteClient as agoliaSearch } from 'algoliasearch/lite';
 import {
@@ -142,14 +143,9 @@ const SearchResult = () => {
                 </div>
               )}
               <br />
-              {previewItem.content?.split('\n').map((line, index) => (
-                <p
-                  key={index}
-                  className='text-muted-foreground font-thin text-xs mb-1'
-                >
-                  {line}
-                </p>
-              ))}
+              <Markdown className='font-thin text-sm text-muted-foreground'>
+                {previewItem.content}
+              </Markdown>
               <div></div>
             </div>
           )}
