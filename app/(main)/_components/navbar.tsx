@@ -5,15 +5,15 @@ import { toast } from 'sonner';
 import { MenuIcon } from 'lucide-react';
 
 import {
-  useDocument,
+  useRemoteDocument,
   useUpdateDocument,
-} from '../(routes)/documents/_hooks/use-document';
+} from '../../../hooks/documents/use-remote-document';
 import { Title } from './title';
 import { Banner } from './banner';
 import { Menu } from './menu';
 import { HttpError, UpdateDocument } from '@/lib/types';
-import { useCurrentDocument } from '@/hooks/use-current-document';
-import { useDocumentsStore } from '@/hooks/use-documents-store';
+import { useLocalDocument } from '@/hooks/documents/use-local-document';
+import { useLocalDocuments } from '@/hooks/documents/use-local-documents';
 import { Publish } from './publish';
 
 interface NavBarProps {
@@ -23,13 +23,13 @@ interface NavBarProps {
 
 export const NavBar = ({ isCollapsed, onResetWidth }: NavBarProps) => {
   const params = useParams();
-  const { isLoading, error } = useDocument(params.documentId as string, {
+  const { isLoading, error } = useRemoteDocument(params.documentId as string, {
     refreshInterval: 0,
     shouldRetryOnError: false,
     revalidateIfStale: false,
   });
-  const { currentDocument, patchCurrent } = useCurrentDocument();
-  const { updateById } = useDocumentsStore();
+  const { currentDocument, patchCurrent } = useLocalDocument();
+  const { updateById } = useLocalDocuments();
 
   const { trigger: triggerUpdate } = useUpdateDocument(
     currentDocument || { id: params.documentId as string }

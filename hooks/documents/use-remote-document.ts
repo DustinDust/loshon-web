@@ -6,7 +6,7 @@ import { Document, HttpError } from '@/lib/types';
 import { getMutateKeyByDocument } from '@/lib/utils';
 import { SWRConfiguration } from 'swr';
 
-export function useDocuments(parentId?: string) {
+export function useRemoteDocuments(parentId?: string) {
   let key = 'documents';
   let path = 'documents';
 
@@ -17,14 +17,14 @@ export function useDocuments(parentId?: string) {
   return useClerkSWR<Document[]>(key, path);
 }
 
-export function useDocument(id: string, options: SWRConfiguration = {}) {
+export function useRemoteDocument(id: string, options: SWRConfiguration = {}) {
   const key = `documents/${id}`;
   const path = `documents/${id}`;
 
   return useClerkSWR<Document>(key, path, {}, options);
 }
 
-export const useArchivesDocument = () => {
+export const useRemoteArchivesDocument = () => {
   const key = 'archives/documents';
   const path = 'documents/_archives';
 

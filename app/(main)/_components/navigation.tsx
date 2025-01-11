@@ -17,7 +17,7 @@ import { toast } from 'sonner';
 
 import { cn } from '@/lib/utils';
 import { UserItem } from './user-item';
-import { useCreateDocument } from '../(routes)/documents/_hooks/use-document';
+import { useCreateDocument } from '../../../hooks/documents/use-remote-document';
 import { Item } from './item';
 import { DocumentList } from './document-list';
 import { TrashBox } from './trash-box';

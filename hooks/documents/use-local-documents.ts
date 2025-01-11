@@ -10,7 +10,7 @@ type DocumentStores = {
   totalCount: number;
 };
 
-export const useDocumentsStore = create<DocumentStores>((set, get) => {
+export const useLocalDocuments = create<DocumentStores>((set, get) => {
   return {
     store: {},
     totalCount: 0,

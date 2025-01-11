@@ -50,3 +50,13 @@ export function formatHighlightedHits(content: string, padDot = false): string {
 
   return formatted;
 }
+
+// https://github.com/edgestorejs/edgestore/blob/main/packages/react/src/utils/index.ts
+export function formatFileSize(bytes?: number) {
+  if (!bytes) return '0 B';
+  const k = 1024;
+  const dm = 2;
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}

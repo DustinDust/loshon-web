@@ -5,12 +5,11 @@ import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
 
-import { useUpdateDocument } from '../(routes)/documents/_hooks/use-document';
+import { useUpdateDocument } from '../../../hooks/documents/use-remote-document';
 import { Button } from '@/components/ui/button';
 import { useCoverImage } from '@/hooks/use-cover-image';
 import { cn } from '@/lib/utils';
 import { HttpError } from '@/lib/types';
-import { useEdgeStore } from '@/lib/edgestore';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface CoverImageProps {
@@ -21,18 +20,16 @@ interface CoverImageProps {
 export const Cover = ({ url, preview }: CoverImageProps) => {
   const coverImage = useCoverImage();
   const params = useParams();
+
   const { trigger: triggerUpdate } = useUpdateDocument({
     id: params.documentId as string,
   });
-  const { edgestore } = useEdgeStore();
 
   const onRemove = async () => {
     if (!url || preview) {
       return;
     }
-    edgestore.publicFiles.delete({
-      url: url,
-    });
+    // TODO: remove file on remote
     triggerUpdate(
       { body: JSON.stringify({ coverImage: null }) },
       {
@@ -52,7 +49,9 @@ export const Cover = ({ url, preview }: CoverImageProps) => {
         url && 'bg-muted'
       )}
     >
-      {!!url && <Image src={url} fill alt='Cover' className='object-cover' />}
+      {!!url && (
+        <Image src={url} fill alt='Cover' className='object-cover' priority />
+      )}
       {url && !preview && (
         <div className='opacity-0 group-hover:opacity-100 absolute bottom-5 right-5 flex items-center gap-x-2'>
           <Button

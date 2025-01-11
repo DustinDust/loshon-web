@@ -6,7 +6,7 @@ import { PlusCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { useCreateDocument } from './_hooks/use-document';
+import { useCreateDocument } from '../../../../hooks/documents/use-remote-document';
 import { Document, TResponse } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 

@@ -9,17 +9,18 @@ import { Spinner } from '@/components/spinner';
 import { Input } from '@/components/ui/input';
 import { ConfirmModal } from '@/components/modals/confirm-modal';
 import {
-  useArchivesDocument,
+  useRemoteArchivesDocument,
   useDeleteDocument,
   useRestoreDocument,
-} from '../(routes)/documents/_hooks/use-document';
+} from '../../../hooks/documents/use-remote-document';
 import { Document } from '@/lib/types';
 import { getMutateKeyByDocument } from '@/lib/utils';
 
 export const TrashBox = () => {
   const router = useRouter();
   // const params = useParams();
-  const { data: documents, isLoading: isFetching } = useArchivesDocument();
+  const { data: documents, isLoading: isFetching } =
+    useRemoteArchivesDocument();
   const { trigger: triggerRestore } = useRestoreDocument();
   const { trigger: triggerDelete } = useDeleteDocument();
   const { mutate } = useSWRConfig();

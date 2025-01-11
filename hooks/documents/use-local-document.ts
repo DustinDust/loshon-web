@@ -7,7 +7,7 @@ type CurrentDocumentStore = {
   patchCurrent: (data: UpdateDocument) => void;
 };
 
-export const useCurrentDocument = create<CurrentDocumentStore>((set, get) => {
+export const useLocalDocument = create<CurrentDocumentStore>((set, get) => {
   return {
     setCurrent: (data) => {
       set(() => ({ currentDocument: data }));

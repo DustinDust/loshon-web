@@ -5,21 +5,21 @@ import { useState } from 'react';
 import { Dialog, DialogHeader, DialogContent } from '@/components/ui/dialog';
 import { useCoverImage } from '@/hooks/use-cover-image';
 import { SingleImageDropzone } from '@/components/single-image-dropzone';
-import { useEdgeStore } from '@/lib/edgestore';
 import { useParams } from 'next/navigation';
-import { useUpdateDocument } from '@/app/(main)/(routes)/documents/_hooks/use-document';
+import { useUpdateDocument } from '@/hooks/documents/use-remote-document';
 import { HttpError } from '@/lib/types';
 import { toast } from 'sonner';
-import { useCurrentDocument } from '@/hooks/use-current-document';
+import { useLocalDocument } from '@/hooks/documents/use-local-document';
+import { useFileUpload } from '@/hooks/use-file-upload';
 
 export const CoverImageModal = () => {
   const params = useParams();
-  const { currentDocument } = useCurrentDocument();
+  const { currentDocument } = useLocalDocument();
   const { trigger: triggerUpdate } = useUpdateDocument(
     currentDocument || { id: params.documentId as string }
   );
   const coverImage = useCoverImage();
-  const { edgestore } = useEdgeStore();
+  const [upload] = useFileUpload();
 
   const [file, setFile] = useState<File>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -35,13 +35,14 @@ export const CoverImageModal = () => {
       setIsSubmitting(true);
       setFile(file);
 
-      const res = await edgestore.publicFiles.upload({
-        file,
-        options: { replaceTargetUrl: coverImage?.url },
-      });
+      const publicUrl = await upload(file);
+      if (!publicUrl) {
+        toast.error('Failed to upload image');
+        return;
+      }
 
       triggerUpdate(
-        { body: JSON.stringify({ coverImage: res.url }) },
+        { body: JSON.stringify({ coverImage: publicUrl }) },
         {
           onSuccess: () => {
             onClose();

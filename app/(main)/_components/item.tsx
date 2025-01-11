@@ -24,10 +24,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useMutateClerkSWR } from '@/hooks/use-clerk-swr';
 import { CreateDocument, Document, TResponse } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { useArchiveDocument } from '../(routes)/documents/_hooks/use-document';
+import { useArchiveDocument } from '../../../hooks/documents/use-remote-document';
 import { useRouter } from 'next/navigation';
 import { useSWRConfig } from 'swr';
-import { useDocumentsStore } from '@/hooks/use-documents-store';
+import { useLocalDocuments } from '@/hooks/documents/use-local-documents';
 
 interface ItemProps {
   id?: string;
@@ -107,7 +107,7 @@ function DocumentItem({
   parentId,
 }: ItemDocumentProps) {
   const { user } = useUser();
-  const { store: documentsStore } = useDocumentsStore();
+  const { store: documentsStore } = useLocalDocuments();
   const router = useRouter();
 
   const handleExpand = (

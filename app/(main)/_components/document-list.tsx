@@ -7,8 +7,8 @@ import { FileIcon } from 'lucide-react';
 import { Document } from '@/lib/types';
 import { Item } from './item';
 import { cn } from '@/lib/utils';
-import { useDocuments } from '../(routes)/documents/_hooks/use-document';
-import { useDocumentsStore } from '@/hooks/use-documents-store';
+import { useRemoteDocuments } from '../../../hooks/documents/use-remote-document';
+import { useLocalDocuments } from '@/hooks/documents/use-local-documents';
 
 interface DocumentListProps {
   parentDocumentId?: string;
@@ -23,7 +23,7 @@ export const DocumentList = ({
   const params = useParams();
 
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-  const { insertDocument } = useDocumentsStore();
+  const { insertDocument } = useLocalDocuments();
 
   const onExpanded = (documentId: string) => {
     setExpanded((prevExpanded) => {
@@ -34,7 +34,7 @@ export const DocumentList = ({
     });
   };
 
-  const { data, isLoading } = useDocuments(parentDocumentId);
+  const { data, isLoading } = useRemoteDocuments(parentDocumentId);
 
   useEffect(() => {
     if (!isLoading && !!data && !!data.data) {

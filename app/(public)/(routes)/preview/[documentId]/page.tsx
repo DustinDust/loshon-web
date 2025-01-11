@@ -4,8 +4,8 @@ import dynamic from 'next/dynamic';
 import { useEffect, useMemo } from 'react';
 
 import { Toolbar } from '@/app/(main)/_components/toolbar';
-import { useDocument } from '@/app/(main)/(routes)/documents/_hooks/use-document';
-import { useCurrentDocument } from '@/hooks/use-current-document';
+import { useRemoteDocument } from '@/hooks/documents/use-remote-document';
+import { useLocalDocument } from '@/hooks/documents/use-local-document';
 import { Cover } from '@/app/(main)/_components/cover';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Error } from '@/components/error';
@@ -23,12 +23,12 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     data: remoteDocumentResponse,
     isLoading,
     error,
-  } = useDocument(params.documentId, {
+  } = useRemoteDocument(params.documentId, {
     shouldRetryOnError: false,
     refreshInterval: 0,
     revalidateIfStale: false,
   });
-  const { setCurrent, currentDocument } = useCurrentDocument();
+  const { setCurrent, currentDocument } = useLocalDocument();
   const Editor = useMemo(
     () => dynamic(() => import('@/components/editor'), { ssr: false }),
     []

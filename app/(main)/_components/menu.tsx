@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { MoreHorizontal, Trash } from 'lucide-react';
 
-import { useArchiveDocument } from '../(routes)/documents/_hooks/use-document';
+import { useArchiveDocument } from '../../../hooks/documents/use-remote-document';
 import { Document, HttpError } from '@/lib/types';
 import {
   DropdownMenu,

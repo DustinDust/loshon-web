@@ -5,7 +5,10 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: 'files.edgestore.dev',
+        hostname: '127.0.0.1',
+      },
+      {
+        hostname: '0.0.0.0',
       },
     ],
   },

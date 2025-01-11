@@ -5,9 +5,9 @@ import type { Metadata } from 'next';
 
 import { ThemeProvider } from '../components/providers/theme-provider';
 import { ModalProvider } from '@/components/providers/modal-provider';
-import { EdgeStoreProvider } from '@/lib/edgestore';
 
 import './globals.css';
+import { SupabaseProvider } from '@/components/providers/supabase-provider';
 
 export const metadata: Metadata = {
   title: "Lo'shon",
@@ -41,7 +41,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang='en'>
         <body className={`${poppins.className}`}>
-          <EdgeStoreProvider>
+          <SupabaseProvider>
             <ThemeProvider
               attribute='class'
               defaultTheme='system'
@@ -52,7 +52,7 @@ export default function RootLayout({
               <Toaster position='top-center' closeButton />
               {children}
             </ThemeProvider>
-          </EdgeStoreProvider>
+          </SupabaseProvider>
         </body>
       </html>
     </ClerkProvider>

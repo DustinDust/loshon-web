@@ -6,11 +6,11 @@ import { BlockNoteView } from '@blocknote/mantine';
 import { useTheme } from 'next-themes';
 import { useDebounceCallback } from 'usehooks-ts';
 
-import { useCurrentDocument } from '@/hooks/use-current-document';
-import { useEdgeStore } from '@/lib/edgestore';
+import { useLocalDocument } from '@/hooks/documents/use-local-document';
 import { toast } from 'sonner';
 
 import '@blocknote/mantine/style.css';
+import { useFileUpload } from '@/hooks/use-file-upload';
 
 interface EditorProps {
   onChange: (content: string, mdContent: string) => void;
@@ -19,13 +19,16 @@ interface EditorProps {
 
 const Editor = ({ onChange, editable }: EditorProps) => {
   const { resolvedTheme } = useTheme();
-  const { currentDocument } = useCurrentDocument();
-  const { edgestore } = useEdgeStore();
+  const { currentDocument } = useLocalDocument();
+  const [upload] = useFileUpload();
 
   const handleUpload = async (file: File) => {
     try {
-      const resp = await edgestore.publicFiles.upload({ file });
-      return resp.url;
+      const path = await upload(file);
+      if (!path || path === '') {
+        throw new Error('Failed to upload image');
+      }
+      return path;
     } catch (e) {
       console.log(e);
       toast.error('Error uploading file, please try again later.');

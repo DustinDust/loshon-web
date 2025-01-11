@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import {
   useDeleteDocument,
   useRestoreDocument,
-} from '../(routes)/documents/_hooks/use-document';
+} from '../../../hooks/documents/use-remote-document';
 import { Document, HttpError } from '@/lib/types';
 import { getMutateKeyByDocument } from '@/lib/utils';
 import { Button } from '@/components/ui/button';

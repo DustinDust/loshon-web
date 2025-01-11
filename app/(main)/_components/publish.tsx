@@ -5,9 +5,9 @@ import {
 } from '@/components/ui/popover';
 import { useState } from 'react';
 
-import { useOrigin } from '@/hooks/user-origin';
+import { useOrigin } from '@/hooks/use-origin';
 import { Document, HttpError, UpdateDocument } from '@/lib/types';
-import { useUpdateDocument } from '../(routes)/documents/_hooks/use-document';
+import { useUpdateDocument } from '../../../hooks/documents/use-remote-document';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Check, Copy, Globe } from 'lucide-react';

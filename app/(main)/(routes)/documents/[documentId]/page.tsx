@@ -4,14 +4,18 @@ import dynamic from 'next/dynamic';
 import { useEffect, useMemo } from 'react';
 
 import { Toolbar } from '@/app/(main)/_components/toolbar';
-import { useDocument, useUpdateDocument } from '../_hooks/use-document';
+import {
+  useRemoteDocument,
+  useUpdateDocument,
+} from '../../../../../hooks/documents/use-remote-document';
 import { HttpError, UpdateDocument } from '@/lib/types';
-import { useCurrentDocument } from '@/hooks/use-current-document';
-import { useDocumentsStore } from '@/hooks/use-documents-store';
+import { useLocalDocument } from '@/hooks/documents/use-local-document';
+import { useLocalDocuments } from '@/hooks/documents/use-local-documents';
 import { Cover } from '@/app/(main)/_components/cover';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Error } from '@/components/error';
 import { NotFound } from '@/components/not-found';
+import { useSupabase } from '@/hooks/use-supabase';
 
 interface DocumentIdPageProps {
   params: {
@@ -24,13 +28,14 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     data: remoteDocumentResponse,
     isLoading,
     error,
-  } = useDocument(params.documentId, {
+  } = useRemoteDocument(params.documentId, {
     shouldRetryOnError: false,
     refreshInterval: 0,
     revalidateIfStale: false,
   });
-  const { setCurrent, patchCurrent, currentDocument } = useCurrentDocument();
-  const { updateById } = useDocumentsStore();
+  const { supabase } = useSupabase();
+  const { setCurrent, patchCurrent, currentDocument } = useLocalDocument();
+  const { updateById } = useLocalDocuments();
   const Editor = useMemo(
     () => dynamic(() => import('@/components/editor'), { ssr: false }),
     []
@@ -100,9 +105,15 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     onUpdate({ content: content, mdContent: mdContent });
   };
 
+  const coverImageUrl = currentDocument.coverImage
+    ? supabase?.storage
+        .from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET!)
+        .getPublicUrl(currentDocument.coverImage).data.publicUrl
+    : null;
+
   return (
     <div className='pb-40'>
-      <Cover url={currentDocument.coverImage} />
+      <Cover url={coverImageUrl} />
       <div className='md-max-w-3xl lg:max-w-4xl mx-auto'>
         <Toolbar
           document={currentDocument}
