@@ -1,4 +1,4 @@
-import { Poppins } from 'next/font/google';
+import { Nunito } from 'next/font/google';
 import { Toaster } from 'sonner';
 import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from 'next';
@@ -26,10 +26,11 @@ export const metadata: Metadata = {
   ],
 };
 
-const poppins = Poppins({
-  subsets: ['latin'],
+const nunito = Nunito({
+  subsets: ['latin', 'vietnamese', 'latin-ext'],
   display: 'swap',
-  weight: '500',
+  weight: '600',
+  fallback: ['system-ui', 'arial'],
 });
 
 export default function RootLayout({
@@ -40,7 +41,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang='en'>
-        <body className={`${poppins.className}`}>
+        <body className={`${nunito.className}`}>
           <SupabaseProvider>
             <ThemeProvider
               attribute='class'

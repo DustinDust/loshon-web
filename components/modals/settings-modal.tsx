@@ -1,4 +1,9 @@
-import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 import { useSettings } from '@/hooks/use-settings';
 import { Label } from '@/components/ui/label';
@@ -9,6 +14,7 @@ export const SettingsModal = () => {
 
   return (
     <Dialog open={settings.isOpen} onOpenChange={settings.onClose}>
+      <DialogTitle aria-valuetext='My settings' />
       <DialogContent>
         <DialogHeader className='border-p pb-3'>
           <h2 className='text-lg font-medium'>My settings</h2>

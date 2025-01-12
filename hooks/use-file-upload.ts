@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-export const useFileUpload = () => {
+export const useUploadFile = () => {
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -15,6 +15,28 @@ export const useFileUpload = () => {
         throw new Error('Upload failed');
       } else {
         return data.path as string;
+      }
+    } catch (err) {
+      setError(err as Error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+  return [handle, { error, loading }] as const;
+};
+
+export const useDeleteFile = () => {
+  const [error, setError] = useState<Error | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handle = useCallback(async (path: string) => {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/upload?path=${path}`, { method: 'DELETE' });
+      if (res.status !== 200) {
+        throw new Error('Upload failed');
+      } else {
+        return true;
       }
     } catch (err) {
       setError(err as Error);

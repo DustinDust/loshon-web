@@ -10,7 +10,8 @@ import { useLocalDocument } from '@/hooks/documents/use-local-document';
 import { toast } from 'sonner';
 
 import '@blocknote/mantine/style.css';
-import { useFileUpload } from '@/hooks/use-file-upload';
+import { useUploadFile } from '@/hooks/use-file-upload';
+import { useSupabase } from '@/hooks/use-supabase';
 
 interface EditorProps {
   onChange: (content: string, mdContent: string) => void;
@@ -20,7 +21,8 @@ interface EditorProps {
 const Editor = ({ onChange, editable }: EditorProps) => {
   const { resolvedTheme } = useTheme();
   const { currentDocument } = useLocalDocument();
-  const [upload] = useFileUpload();
+  const { supabase } = useSupabase();
+  const [upload] = useUploadFile();
 
   const handleUpload = async (file: File) => {
     try {
@@ -28,7 +30,13 @@ const Editor = ({ onChange, editable }: EditorProps) => {
       if (!path || path === '') {
         throw new Error('Failed to upload image');
       }
-      return path;
+      const url = supabase?.storage
+        .from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET || 'images')
+        .getPublicUrl(path).data.publicUrl;
+      if (!url) {
+        throw new Error('Failed upload');
+      }
+      return url;
     } catch (e) {
       console.log(e);
       toast.error('Error uploading file, please try again later.');

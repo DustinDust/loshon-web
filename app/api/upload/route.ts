@@ -1,6 +1,7 @@
-import { uploadFile } from '@/lib/file-storage';
+import { deleteFile, uploadFile } from '@/lib/file-storage';
 import { currentUser } from '@clerk/nextjs/server';
 import { randomUUID } from 'node:crypto';
+import { URL } from 'node:url';
 
 export async function POST(request: Request) {
   const user = await currentUser();
@@ -24,11 +25,23 @@ export async function POST(request: Request) {
   });
 }
 
-// TODO: implement this
-export async function DELETE() {
+export async function DELETE(request: Request) {
   const user = await currentUser();
   if (!user) {
     return new Response('Unauthorized', { status: 401 });
   }
-  return new Response('Not implemented', { status: 501 });
+
+  const path = new URL(request.url).searchParams.get('path');
+  if (!path) {
+    return new Response('Invalid images path', { status: 400 });
+  }
+  const bucket = process.env.NEXT_PUBLIC_SUPABASE_BUCKET || 'images';
+  try {
+    await deleteFile(bucket, path);
+  } catch (e) {
+    if (e instanceof Error) {
+      return new Response(e.message, { status: 500 });
+    }
+  }
+  return new Response('Deleted', { status: 200 });
 }

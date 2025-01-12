@@ -15,7 +15,6 @@ import { Cover } from '@/app/(main)/_components/cover';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Error } from '@/components/error';
 import { NotFound } from '@/components/not-found';
-import { useSupabase } from '@/hooks/use-supabase';
 
 interface DocumentIdPageProps {
   params: {
@@ -33,7 +32,6 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     refreshInterval: 0,
     revalidateIfStale: false,
   });
-  const { supabase } = useSupabase();
   const { setCurrent, patchCurrent, currentDocument } = useLocalDocument();
   const { updateById } = useLocalDocuments();
   const Editor = useMemo(
@@ -105,15 +103,9 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     onUpdate({ content: content, mdContent: mdContent });
   };
 
-  const coverImageUrl = currentDocument.coverImage
-    ? supabase?.storage
-        .from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET!)
-        .getPublicUrl(currentDocument.coverImage).data.publicUrl
-    : null;
-
   return (
     <div className='pb-40'>
-      <Cover url={coverImageUrl} />
+      <Cover path={currentDocument.coverImage} />
       <div className='md-max-w-3xl lg:max-w-4xl mx-auto'>
         <Toolbar
           document={currentDocument}
