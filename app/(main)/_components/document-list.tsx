@@ -24,6 +24,12 @@ export const DocumentList = ({
 
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const { insertDocument } = useLocalDocuments();
+  const { data, isLoading } = useRemoteDocuments(parentDocumentId);
+  useEffect(() => {
+    if (!isLoading && !!data && !!data.data) {
+      data.data.forEach(insertDocument);
+    }
+  }, [data, isLoading, insertDocument]);
 
   const onExpanded = (documentId: string) => {
     setExpanded((prevExpanded) => {
@@ -34,15 +40,7 @@ export const DocumentList = ({
     });
   };
 
-  const { data, isLoading } = useRemoteDocuments(parentDocumentId);
-
-  useEffect(() => {
-    if (!isLoading && !!data && !!data.data) {
-      data.data.forEach(insertDocument);
-    }
-  }, [data, isLoading, insertDocument]);
-
-  if (isLoading || !data?.data) {
+  const renderSkeletons = () => {
     return (
       <>
         <Item.Skeleton level={level} />
@@ -54,6 +52,10 @@ export const DocumentList = ({
         )}
       </>
     );
+  };
+
+  if (isLoading || !data?.data) {
+    return renderSkeletons();
   }
 
   return (

@@ -10,7 +10,13 @@ import {
   Trash,
 } from 'lucide-react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import React, { ElementRef, useEffect, useRef, useState } from 'react';
+import React, {
+  ElementRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 import { useUser } from '@clerk/nextjs';
 import { toast } from 'sonner';
@@ -43,50 +49,12 @@ export const Navigation = () => {
   const navbarRef = useRef<ElementRef<'div'>>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
-
-  const { trigger: triggerCreate } = useCreateDocument();
-
-  const handleMouseDown = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    isResizingRef.current = true;
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
-
-  const handleMouseMove = (event: MouseEvent) => {
-    if (!isResizingRef.current) return;
-
-    let newWidth = event.clientX;
-    if (newWidth < 240) {
-      newWidth = 240;
-    }
-    if (newWidth > 480) {
-      newWidth = 480;
-    }
-    if (sidebarRef.current && navbarRef.current) {
-      sidebarRef.current.style.width = `${newWidth}px`;
-      navbarRef.current.style.setProperty('left', `${newWidth}px`);
-      navbarRef.current.style.setProperty(
-        'width',
-        `calc(100% - ${newWidth}px)`
-      );
-    }
-  };
-
-  const handleMouseUp = () => {
-    isResizingRef.current = false;
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
-  };
-
   const openSearch = useSearch((store) => store.onOpen);
   const openSettings = useSettings((store) => store.onOpen);
 
-  const resetWidth = () => {
+  const { trigger: triggerCreate } = useCreateDocument();
+
+  const resetWidth = useCallback(() => {
     if (!sidebarRef.current || !navbarRef.current) return;
     setIsCollapsed(false);
     setIsResetting(true);
@@ -99,9 +67,9 @@ export const Navigation = () => {
     setTimeout(() => {
       setIsResetting(false);
     }, 300);
-  };
+  }, [isMobile]);
 
-  const collapse = () => {
+  const collapse = useCallback(() => {
     if (!sidebarRef.current || !navbarRef.current) return;
 
     setIsCollapsed(true);
@@ -112,7 +80,7 @@ export const Navigation = () => {
     setTimeout(() => {
       setIsResetting(false);
     }, 300);
-  };
+  }, []);
 
   useEffect(() => {
     if (isMobile) {
@@ -120,14 +88,7 @@ export const Navigation = () => {
     } else {
       resetWidth();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMobile]);
-
-  useEffect(() => {
-    if (isMobile) {
-      collapse();
-    }
-  }, [pathname, isMobile]);
+  }, [pathname, isMobile, resetWidth, collapse]);
 
   const handleCreate = async () => {
     const loadingToast = toast.loading('Creating...');
@@ -151,6 +112,42 @@ export const Navigation = () => {
         },
       }
     );
+  };
+
+  const handleMouseDown = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    isResizingRef.current = true;
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleMouseMove = (event: MouseEvent) => {
+    if (!isResizingRef.current) return;
+    let newWidth = event.clientX;
+    if (newWidth < 240) {
+      newWidth = 240;
+    }
+    if (newWidth > 480) {
+      newWidth = 480;
+    }
+    if (sidebarRef.current && navbarRef.current) {
+      sidebarRef.current.style.width = `${newWidth}px`;
+      navbarRef.current.style.setProperty('left', `${newWidth}px`);
+      navbarRef.current.style.setProperty(
+        'width',
+        `calc(100% - ${newWidth}px)`
+      );
+    }
+  };
+
+  const handleMouseUp = () => {
+    isResizingRef.current = false;
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
   };
 
   return (

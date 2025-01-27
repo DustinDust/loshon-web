@@ -1,7 +1,6 @@
 'use client';
 
 import { useSession } from '@clerk/nextjs';
-import { redirect } from 'next/navigation';
 import React from 'react';
 
 import { Spinner } from '@/components/spinner';
@@ -10,7 +9,7 @@ import { SearchCommand } from '@/components/search-command';
 
 // Use layout to protect pages
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
-  const { isSignedIn, isLoaded } = useSession();
+  const { isLoaded } = useSession();
 
   if (!isLoaded) {
     return (
@@ -18,10 +17,6 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         <Spinner size='lg' />
       </div>
     );
-  }
-
-  if (!isSignedIn) {
-    return redirect('/');
   }
 
   return (

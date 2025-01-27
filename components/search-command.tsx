@@ -40,8 +40,8 @@ export const SearchCommand = () => {
   const onClose = useSearch((store) => store.onClose);
 
   const searchClient = agoliaSearch(
-    process.env.NEXT_PUBLIC_AGOLIA_APP_ID!,
-    process.env.NEXT_PUBLIC_AGOLIA_API_KEY!
+    process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
+    process.env.NEXT_PUBLIC_ALGOLIA_API_KEY!
   );
 
   useEffect(() => {
@@ -59,12 +59,12 @@ export const SearchCommand = () => {
     return () => document.removeEventListener('keydown', ctrlKDown);
   }, [toggle]);
 
+  const indexName = `${process.env.NEXT_PUBLIC_NODE_ENV}_documents`;
+
   // prevent ssr completely
   if (!isMounted) {
     return null;
   }
-
-  const indexName = `${process.env.NEXT_PUBLIC_NODE_ENV}_documents`;
 
   return (
     <CommandDialog

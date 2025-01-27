@@ -68,7 +68,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
   return (
     <div className='pb-40'>
       <NavBar />
-      <Cover url={currentDocument.coverImage} preview />
+      <Cover path={currentDocument.coverImage} preview />
       <div className='md-max-w-3xl lg:max-w-4xl mx-auto'>
         <Toolbar
           document={currentDocument}
