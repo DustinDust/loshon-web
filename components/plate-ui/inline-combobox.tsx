@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, {
@@ -238,10 +239,10 @@ const InlineComboboxInput = forwardRef<
     <>
       {showTrigger && trigger}
 
-      <span className="relative min-h-[1lh]">
+      <span className='relative min-h-[1lh]'>
         <span
-          className="invisible overflow-hidden text-nowrap"
-          aria-hidden="true"
+          className='invisible overflow-hidden text-nowrap'
+          aria-hidden='true'
         >
           {value || '\u200B'}
         </span>
