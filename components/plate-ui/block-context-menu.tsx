@@ -2,7 +2,6 @@
 
 import { useCallback, useState } from 'react';
 
-import { ParagraphPlugin, useEditorPlugin } from '@udecode/plate/react';
 import { AIChatPlugin } from '@udecode/plate-ai/react';
 import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
 import { HEADING_KEYS } from '@udecode/plate-heading';
@@ -12,6 +11,7 @@ import {
   BlockMenuPlugin,
   BlockSelectionPlugin,
 } from '@udecode/plate-selection/react';
+import { ParagraphPlugin, useEditorPlugin } from '@udecode/plate/react';
 
 import { useIsTouchDevice } from '@/hooks/use-is-touch-device';
 
@@ -91,10 +91,10 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
           });
         }}
       >
-        <div className='w-full'>{children}</div>
+        <div className="w-full">{children}</div>
       </ContextMenuTrigger>
       <ContextMenuContent
-        className='w-64'
+        className="w-64"
         onCloseAutoFocus={(e) => {
           e.preventDefault();
           editor.getApi(BlockSelectionPlugin).blockSelection.focus();
@@ -136,7 +136,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
           </ContextMenuItem>
           <ContextMenuSub>
             <ContextMenuSubTrigger>Turn into</ContextMenuSubTrigger>
-            <ContextMenuSubContent className='w-48'>
+            <ContextMenuSubContent className="w-48">
               <ContextMenuItem
                 onClick={() => handleTurnInto(ParagraphPlugin.key)}
               >
@@ -182,7 +182,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
           </ContextMenuItem>
           <ContextMenuSub>
             <ContextMenuSubTrigger>Align</ContextMenuSubTrigger>
-            <ContextMenuSubContent className='w-48'>
+            <ContextMenuSubContent className="w-48">
               <ContextMenuItem onClick={() => handleAlign('left')}>
                 Left
               </ContextMenuItem>

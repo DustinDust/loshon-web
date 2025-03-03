@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, {
@@ -31,13 +30,13 @@ import {
   useComboboxStore,
 } from '@ariakit/react';
 import { cn, withCn } from '@udecode/cn';
-import { useComposedRef, useEditorRef } from '@udecode/plate/react';
 import { filterWords } from '@udecode/plate-combobox';
 import {
   type UseComboboxInputResult,
   useComboboxInput,
   useHTMLInputCursorState,
 } from '@udecode/plate-combobox/react';
+import { useComposedRef, useEditorRef } from '@udecode/plate/react';
 import { cva } from 'class-variance-authority';
 
 type FilterFn = (
@@ -50,9 +49,9 @@ interface InlineComboboxContextValue {
   inputProps: UseComboboxInputResult['props'];
   inputRef: RefObject<HTMLInputElement | null>;
   removeInput: UseComboboxInputResult['removeInput'];
-  setHasEmpty: (hasEmpty: boolean) => void;
   showTrigger: boolean;
   trigger: string;
+  setHasEmpty: (hasEmpty: boolean) => void;
 }
 
 const InlineComboboxContext = createContext<InlineComboboxContextValue>(
@@ -78,9 +77,9 @@ interface InlineComboboxProps {
   trigger: string;
   filter?: FilterFn | false;
   hideWhenNoValue?: boolean;
-  setValue?: (value: string) => void;
   showTrigger?: boolean;
   value?: string;
+  setValue?: (value: string) => void;
 }
 
 const InlineCombobox = ({
@@ -192,7 +191,6 @@ const InlineCombobox = ({
     if (!store.getState().activeId) {
       store.setActiveId(store.first());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, store]);
 
   return (
@@ -239,10 +237,10 @@ const InlineComboboxInput = forwardRef<
     <>
       {showTrigger && trigger}
 
-      <span className='relative min-h-[1lh]'>
+      <span className="relative min-h-[1lh]">
         <span
-          className='invisible overflow-hidden text-nowrap'
-          aria-hidden='true'
+          className="invisible overflow-hidden text-nowrap"
+          aria-hidden="true"
         >
           {value || '\u200B'}
         </span>
@@ -250,7 +248,7 @@ const InlineComboboxInput = forwardRef<
         <Combobox
           ref={ref}
           className={cn(
-            'absolute left-0 top-0 size-full bg-transparent outline-none',
+            'absolute top-0 left-0 size-full bg-transparent outline-none',
             className
           )}
           value={value}
@@ -274,7 +272,7 @@ const InlineComboboxContent: typeof ComboboxPopover = ({
     <Portal>
       <ComboboxPopover
         className={cn(
-          'z-[500] max-h-[288px] w-[300px] overflow-y-auto rounded-md bg-popover shadow-md',
+          'z-500 max-h-[288px] w-[300px] overflow-y-auto rounded-md bg-popover shadow-md',
           className
         )}
         {...props}
@@ -284,7 +282,7 @@ const InlineComboboxContent: typeof ComboboxPopover = ({
 };
 
 const comboboxItemVariants = cva(
-  'relative mx-1 flex h-[28px] select-none items-center rounded-sm px-2 text-sm text-foreground outline-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'relative mx-1 flex h-[28px] items-center rounded-sm px-2 text-sm text-foreground outline-none select-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     defaultVariants: {
       interactive: true,
@@ -375,12 +373,12 @@ const InlineComboboxRow = ComboboxRow;
 
 const InlineComboboxGroup = withCn(
   ComboboxGroup,
-  'hidden py-1.5 [&:has([role=option])]:block [&:not(:last-child)]:border-b'
+  'hidden py-1.5 not-last:border-b [&:has([role=option])]:block'
 );
 
 const InlineComboboxGroupLabel = withCn(
   ComboboxGroupLabel,
-  'mb-2 mt-1.5 px-3 text-xs font-medium text-muted-foreground'
+  'mt-1.5 mb-2 px-3 text-xs font-medium text-muted-foreground'
 );
 
 export {

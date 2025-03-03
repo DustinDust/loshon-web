@@ -20,9 +20,12 @@ import { SlashPlugin } from '@udecode/plate-slash-command/react';
 import { TogglePlugin } from '@udecode/plate-toggle/react';
 import { TrailingBlockPlugin } from '@udecode/plate-trailing-block';
 
-// import { FixedToolbarPlugin } from '@/components/editor/plugins/fixed-toolbar-plugin';
+import { FixedToolbarPlugin } from '@/components/editor/plugins/fixed-toolbar-plugin';
 import { FloatingToolbarPlugin } from '@/components/editor/plugins/floating-toolbar-plugin';
+import { BlockDiscussion } from '@/components/plate-ui/block-discussion';
+import { SuggestionBelowNodes } from '@/components/plate-ui/suggestion-line-break';
 
+import { aiPlugins } from './ai-plugins';
 import { alignPlugin } from './align-plugin';
 import { autoformatPlugin } from './autoformat-plugin';
 import { basicNodesPlugins } from './basic-nodes-plugins';
@@ -39,7 +42,9 @@ import { linkPlugin } from './link-plugin';
 import { mediaPlugins } from './media-plugins';
 import { mentionPlugin } from './mention-plugin';
 import { resetBlockTypePlugin } from './reset-block-type-plugin';
+import { skipMarkPlugin } from './skip-mark-plugin';
 import { softBreakPlugin } from './soft-break-plugin';
+import { suggestionPlugin } from './suggestion-plugin';
 import { tablePlugin } from './table-plugin';
 import { tocPlugin } from './toc-plugin';
 
@@ -63,6 +68,7 @@ export const viewPlugins = [
   FontSizePlugin,
   HighlightPlugin,
   KbdPlugin,
+  skipMarkPlugin,
 
   // Block Style
   alignPlugin,
@@ -70,12 +76,17 @@ export const viewPlugins = [
   lineHeightPlugin,
 
   // Collaboration
-  commentsPlugin,
+  commentsPlugin.configure({
+    render: { aboveNodes: BlockDiscussion as any },
+  }),
+  suggestionPlugin.configure({
+    render: { belowNodes: SuggestionBelowNodes as any },
+  }),
 ] as const;
 
 export const editorPlugins = [
   // AI
-  // ...aiPlugins,
+  ...aiPlugins,
 
   // Nodes
   ...viewPlugins,
@@ -86,7 +97,6 @@ export const editorPlugins = [
   cursorOverlayPlugin,
   ...blockMenuPlugins,
   ...dndPlugins,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   EmojiPlugin.configure({ options: { data: emojiMartData as any } }),
   exitBreakPlugin,
   resetBlockTypePlugin,
@@ -100,6 +110,6 @@ export const editorPlugins = [
   JuicePlugin,
 
   // UI
-  // FixedToolbarPlugin,
+  FixedToolbarPlugin,
   FloatingToolbarPlugin,
 ];
