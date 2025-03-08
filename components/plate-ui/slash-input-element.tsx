@@ -3,7 +3,6 @@
 import React from 'react';
 
 import { withRef } from '@udecode/cn';
-import { AIChatPlugin } from '@udecode/plate-ai/react';
 import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
 import { CodeBlockPlugin } from '@udecode/plate-code-block/react';
 import { DatePlugin } from '@udecode/plate-date/react';
@@ -31,7 +30,6 @@ import {
   PilcrowIcon,
   Quote,
   RadicalIcon,
-  SparklesIcon,
   Square,
   Table,
   TableOfContentsIcon,
@@ -70,19 +68,19 @@ interface Item {
 }
 
 const groups: Group[] = [
-  {
-    group: 'AI',
-    items: [
-      {
-        focusEditor: false,
-        icon: <SparklesIcon />,
-        value: 'AI',
-        onSelect: (editor) => {
-          editor.getApi(AIChatPlugin).aiChat.show();
-        },
-      },
-    ],
-  },
+  // {
+  //   group: 'AI',
+  //   items: [
+  //     {
+  //       focusEditor: false,
+  //       icon: <SparklesIcon />,
+  //       value: 'AI',
+  //       onSelect: (editor) => {
+  //         editor.getApi(AIChatPlugin).aiChat.show();
+  //       },
+  //     },
+  //   ],
+  // },
   {
     group: 'Basic blocks',
     items: [
@@ -217,12 +215,12 @@ export const SlashInputElement = withRef<typeof PlateElement>(
     return (
       <PlateElement
         ref={ref}
-        as="span"
+        as='span'
         className={className}
         data-slate-value={element.value}
         {...props}
       >
-        <InlineCombobox element={element} trigger="/">
+        <InlineCombobox element={element} trigger='/'>
           <InlineComboboxInput />
 
           <InlineComboboxContent>
@@ -243,7 +241,7 @@ export const SlashInputElement = withRef<typeof PlateElement>(
                       group={group}
                       keywords={keywords}
                     >
-                      <div className="mr-2 text-muted-foreground">{icon}</div>
+                      <div className='mr-2 text-muted-foreground'>{icon}</div>
                       {label ?? value}
                     </InlineComboboxItem>
                   )

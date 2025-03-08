@@ -62,11 +62,8 @@ import {
   usePlateEditor,
 } from '@udecode/plate/react';
 
-import { copilotPlugins } from '@/components/editor/plugins/copilot-plugins';
 import { editorPlugins } from '@/components/editor/plugins/editor-plugins';
-import { FixedToolbarPlugin } from '@/components/editor/plugins/fixed-toolbar-plugin';
 import { FloatingToolbarPlugin } from '@/components/editor/plugins/floating-toolbar-plugin';
-import { AILeaf } from '@/components/plate-ui/ai-leaf';
 import { BlockquoteElement } from '@/components/plate-ui/blockquote-element';
 import { CodeBlockElement } from '@/components/plate-ui/code-block-element';
 import { CodeLeaf } from '@/components/plate-ui/code-leaf';
@@ -154,7 +151,7 @@ export const viewComponents = {
 
 export const editorComponents = {
   ...viewComponents,
-  [AIPlugin.key]: AILeaf,
+  // [AIPlugin.key]: AILeaf,
   [EmojiInputPlugin.key]: EmojiInputElement,
   [MentionInputPlugin.key]: MentionInputElement,
   [SlashInputPlugin.key]: SlashInputElement,
@@ -183,9 +180,9 @@ export const useCreateEditor = (
         ...override,
       },
       plugins: [
-        ...copilotPlugins,
+        // ...copilotPlugins,
         ...editorPlugins,
-        FixedToolbarPlugin,
+        // FixedToolbarPlugin,
         FloatingToolbarPlugin,
       ],
       value: [

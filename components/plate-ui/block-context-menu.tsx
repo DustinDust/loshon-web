@@ -91,10 +91,10 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
           });
         }}
       >
-        <div className="w-full">{children}</div>
+        <div className='w-full'>{children}</div>
       </ContextMenuTrigger>
       <ContextMenuContent
-        className="w-64"
+        className='w-64'
         onCloseAutoFocus={(e) => {
           e.preventDefault();
           editor.getApi(BlockSelectionPlugin).blockSelection.focus();
@@ -107,13 +107,13 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
         }}
       >
         <ContextMenuGroup>
-          <ContextMenuItem
+          {/* <ContextMenuItem
             onClick={() => {
               setValue('askAI');
             }}
           >
             Ask AI
-          </ContextMenuItem>
+          </ContextMenuItem> */}
           <ContextMenuItem
             onClick={() => {
               editor
@@ -136,7 +136,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
           </ContextMenuItem>
           <ContextMenuSub>
             <ContextMenuSubTrigger>Turn into</ContextMenuSubTrigger>
-            <ContextMenuSubContent className="w-48">
+            <ContextMenuSubContent className='w-48'>
               <ContextMenuItem
                 onClick={() => handleTurnInto(ParagraphPlugin.key)}
               >
@@ -182,7 +182,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
           </ContextMenuItem>
           <ContextMenuSub>
             <ContextMenuSubTrigger>Align</ContextMenuSubTrigger>
-            <ContextMenuSubContent className="w-48">
+            <ContextMenuSubContent className='w-48'>
               <ContextMenuItem onClick={() => handleAlign('left')}>
                 Left
               </ContextMenuItem>

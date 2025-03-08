@@ -20,12 +20,10 @@ import { SlashPlugin } from '@udecode/plate-slash-command/react';
 import { TogglePlugin } from '@udecode/plate-toggle/react';
 import { TrailingBlockPlugin } from '@udecode/plate-trailing-block';
 
-import { FixedToolbarPlugin } from '@/components/editor/plugins/fixed-toolbar-plugin';
 import { FloatingToolbarPlugin } from '@/components/editor/plugins/floating-toolbar-plugin';
 import { BlockDiscussion } from '@/components/plate-ui/block-discussion';
 import { SuggestionBelowNodes } from '@/components/plate-ui/suggestion-line-break';
 
-import { aiPlugins } from './ai-plugins';
 import { alignPlugin } from './align-plugin';
 import { autoformatPlugin } from './autoformat-plugin';
 import { basicNodesPlugins } from './basic-nodes-plugins';
@@ -86,7 +84,7 @@ export const viewPlugins = [
 
 export const editorPlugins = [
   // AI
-  ...aiPlugins,
+  // ...aiPlugins,
 
   // Nodes
   ...viewPlugins,
@@ -110,6 +108,6 @@ export const editorPlugins = [
   JuicePlugin,
 
   // UI
-  FixedToolbarPlugin,
+  // FixedToolbarPlugin,
   FloatingToolbarPlugin,
 ];
