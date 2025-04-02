@@ -1,17 +1,171 @@
 'use client';
 
+import {
+  usePlateEditor,
+  Plate,
+  PlateContent,
+  useEditorContainerRef,
+  useEditorRef,
+  PlateElement,
+  PlateLeaf,
+} from '@udecode/plate/react';
+import {
+  BoldPlugin,
+  ItalicPlugin,
+  UnderlinePlugin,
+  CodePlugin,
+} from '@udecode/plate-basic-marks/react';
+import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
+import { HeadingPlugin } from '@udecode/plate-heading/react';
 import React from 'react';
 
 import type { PlateContentProps } from '@udecode/plate/react';
 import type { VariantProps } from 'class-variance-authority';
 
-import { cn } from '@udecode/cn';
-import {
-  PlateContent,
-  useEditorContainerRef,
-  useEditorRef,
-} from '@udecode/plate/react';
+import { cn, withProps } from '@udecode/cn';
 import { cva } from 'class-variance-authority';
+
+export const basicEditorValue = [
+  {
+    id: '1',
+    children: [
+      {
+        text: '🌳 Blocks',
+      },
+    ],
+    type: 'h1',
+  },
+  {
+    id: '2',
+    children: [
+      {
+        text: 'Easily create headings of various levels, from H1 to H6, to structure your content and make it more organized.',
+      },
+    ],
+    type: 'p',
+  },
+  {
+    id: '3',
+    children: [
+      {
+        text: 'Create blockquotes to emphasize important information or highlight quotes from external sources.',
+      },
+    ],
+    type: 'blockquote',
+  },
+  {
+    id: '1',
+    children: [
+      {
+        text: '🌱 Marks',
+      },
+    ],
+    type: 'h1',
+  },
+  {
+    id: '2',
+    children: [
+      {
+        text: 'Add style and emphasis to your text using the mark plugins, which offers a variety of formatting options.',
+      },
+    ],
+    type: 'p',
+  },
+  {
+    id: '3',
+    children: [
+      {
+        text: 'Make text ',
+      },
+      {
+        bold: true,
+        text: 'bold',
+      },
+      {
+        text: ', ',
+      },
+      {
+        italic: true,
+        text: 'italic',
+      },
+      {
+        text: ', ',
+      },
+      {
+        text: 'underlined',
+        underline: true,
+      },
+      {
+        text: ', or apply a ',
+      },
+      {
+        bold: true,
+        italic: true,
+        text: 'combination',
+        underline: true,
+      },
+      {
+        text: ' of these styles for a visually striking effect.',
+      },
+    ],
+    type: 'p',
+  },
+];
+
+export const PlateEditor = () => {
+  const editor = usePlateEditor({
+    value: basicEditorValue || undefined,
+    handlers: {
+      onChange: (editor) => {
+        console.log(JSON.stringify(editor.value));
+      },
+    },
+    plugins: [
+      BoldPlugin,
+      ItalicPlugin,
+      UnderlinePlugin,
+      CodePlugin,
+      BlockquotePlugin,
+      HeadingPlugin,
+    ],
+    override: {
+      components: {
+        blockquote: withProps(PlateElement, {
+          as: 'blockquote',
+          className: 'mb-4 border-l-4 border-[#d0d7de] pl-4 text-[#636c76]',
+        }),
+        bold: withProps(PlateLeaf, { as: 'strong' }),
+        h1: withProps(PlateElement, {
+          as: 'h1',
+          className:
+            'mb-4 mt-6 text-3xl font-semibold tracking-tight lg:text-4xl',
+        }),
+        h2: withProps(PlateElement, {
+          as: 'h2',
+          className: 'mb-4 mt-6 text-2xl font-semibold tracking-tight',
+        }),
+        h3: withProps(PlateElement, {
+          as: 'h3',
+          className: 'mb-4 mt-6 text-xl font-semibold tracking-tight',
+        }),
+        italic: withProps(PlateLeaf, { as: 'em' }),
+        p: withProps(PlateElement, {
+          as: 'p',
+          className: 'mb-4',
+        }),
+        underline: withProps(PlateLeaf, { as: 'u' }),
+      },
+    },
+  });
+
+  return (
+    <Plate editor={editor}>
+      <EditorContainer>
+        <Editor placeholder='Type...'></Editor>
+      </EditorContainer>
+    </Plate>
+  );
+};
 
 const editorContainerVariants = cva(
   'relative w-full cursor-text overflow-y-auto caret-primary select-text selection:bg-brand/25 focus-visible:outline-none [&_.slate-selection-area]:z-50 [&_.slate-selection-area]:border [&_.slate-selection-area]:border-brand/25 [&_.slate-selection-area]:bg-brand/15',
@@ -45,7 +199,8 @@ export const EditorContainer = ({
 }: React.HTMLAttributes<HTMLDivElement> &
   VariantProps<typeof editorContainerVariants>) => {
   const editor = useEditorRef();
-  const containerRef = useEditorContainerRef();
+  const containerRef =
+    useEditorContainerRef() as React.RefObject<HTMLDivElement>; // typing shi
 
   return (
     <div

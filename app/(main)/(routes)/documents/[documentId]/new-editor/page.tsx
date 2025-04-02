@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Error } from '@/components/error';
 import { NotFound } from '@/components/not-found';
 import { useEffect } from 'react';
-import { PlateEditor } from '@/components/editor/plate-editor';
+import { PlateEditor } from '@/components/editor/editor';
 
 interface DocumentIdPageProps {
   params: {
