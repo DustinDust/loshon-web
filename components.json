@@ -17,13 +17,5 @@
     "cssVariables": true,
     "prefix": ""
   },
-  "tsx": true,
-  "registries": {
-    "plate": {
-      "aliases": {
-        "ui": "@/components/plate-ui"
-      },
-      "url": "https://platejs.org/r"
-    }
-  }
+  "tsx": true
 }

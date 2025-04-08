@@ -3,7 +3,7 @@ import { BasicElementsPlugin } from '@udecode/plate-basic-elements/react';
 import { HeadingPlugin } from '@udecode/plate-heading/react';
 import { HEADING_KEYS } from '@udecode/plate-heading';
 import { withProps } from '@udecode/cn';
-import { PlateElement } from '@udecode/plate/react';
+import { ParagraphPlugin, PlateElement } from '@udecode/plate/react';
 import { CodeBlockPlugin } from '@udecode/plate-code-block/react';
 
 import { CodeBlockElement } from '../components/codeblock';
@@ -57,6 +57,16 @@ export const basicElementsPlugin = BasicElementsPlugin.configurePlugin(
     override: {
       components: {
         [BlockquotePlugin.key]: BlockquoteElement,
+      },
+    },
+  })
+  .configurePlugin(ParagraphPlugin, {
+    override: {
+      components: {
+        [ParagraphPlugin.key]: withProps(PlateElement, {
+          as: 'p',
+          className: 'my-2 text-base leading-7',
+        }),
       },
     },
   });

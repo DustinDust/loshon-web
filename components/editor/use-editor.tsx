@@ -3,10 +3,17 @@
 import { AnyPluginConfig, WithAnyKey } from '@udecode/plate';
 import { DOMHandlers, OnChange, usePlateEditor } from '@udecode/plate/react';
 import { NodeIdPlugin } from '@udecode/plate-node-id';
-import { basicElementsPlugin } from './plugins/basic-elements';
-import { autoformatPlugin } from './plugins/autoformat';
-import { resetBlockTypePlugin } from './plugins/reset-node';
-import { basicMarksPlugin } from './plugins/basic-marks';
+import {
+  autoformatPlugin,
+  basicElementsPlugin,
+  basicMarksPlugin,
+  exitBreakPlugin,
+  indentPlugin,
+  resetBlockTypePlugin,
+  slashCommand,
+  softBreakPlugin,
+} from './plugins';
+import { indentListPlugin } from './plugins/indent-list';
 
 interface IUseEditor {
   value?: any;
@@ -22,12 +29,20 @@ export const useEditor = ({ value, handlers }: IUseEditor) => {
       ...handlers,
     },
     plugins: [
-      NodeIdPlugin,
+      NodeIdPlugin, // no config
 
+      // Basic text editor
       basicMarksPlugin,
       basicElementsPlugin,
       autoformatPlugin,
       resetBlockTypePlugin,
+      exitBreakPlugin,
+      softBreakPlugin,
+      indentPlugin,
+      indentListPlugin,
+
+      // functionality
+      slashCommand,
     ],
   });
   return editor;

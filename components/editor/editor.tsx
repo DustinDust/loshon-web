@@ -19,7 +19,7 @@ export const PlateEditor = () => {
   const editor = useEditor({
     handlers: {
       onChange: (e) => {
-        console.log(e);
+        console.log(e.value);
       },
     },
   });
