@@ -14,15 +14,21 @@ import {
   softBreakPlugin,
 } from './plugins';
 import { indentListPlugin } from './plugins/indent-list';
+import { blockSelectionPlugins } from './plugins/block-selection';
 
 interface IUseEditor {
   value?: any;
   handlers: DOMHandlers<WithAnyKey<AnyPluginConfig>> & {
     onChange: OnChange<WithAnyKey<AnyPluginConfig>>;
   };
+  readonly?: boolean;
 }
 
-export const useEditor = ({ value, handlers }: IUseEditor) => {
+export const useEditor = ({
+  value,
+  handlers,
+  readonly = false,
+}: IUseEditor) => {
   const editor = usePlateEditor({
     value: value,
     handlers: {
@@ -43,6 +49,7 @@ export const useEditor = ({ value, handlers }: IUseEditor) => {
 
       // functionality
       slashCommand,
+      ...blockSelectionPlugins,
     ],
   });
   return editor;

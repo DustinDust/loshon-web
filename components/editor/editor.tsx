@@ -1,6 +1,11 @@
 'use client';
 
-import { Plate, PlateContent } from '@udecode/plate/react';
+import {
+  Plate,
+  PlateContent,
+  useEditorContainerRef,
+  useEditorRef,
+} from '@udecode/plate/react';
 import React from 'react';
 
 import { useEditor } from './use-editor';
@@ -26,9 +31,19 @@ export const PlateEditor = () => {
 
   return (
     <Plate editor={editor}>
-      <div className='relative w-full cursor-text overflow-y-auto caret-primary select-text selection:bg-brand/25 focus-visible:outline-none [&_.slate-selection-area]:z-50 [&_.slate-selection-area]:border [&_.slate-selection-area]:border-brand/25 [&_.slate-selection-area]:bg-brand/15 h-full ignore-click-outside/toolbar'>
+      <EditorContainer className='relative w-full cursor-text overflow-y-auto caret-primary select-text selection:bg-brand/25 focus-visible:outline-none [&_.slate-selection-area]:z-50 [&_.slate-selection-area]:border [&_.slate-selection-area]:border-brand/25 [&_.slate-selection-area]:bg-brand/15 h-full ignore-click-outside/toolbar'>
         <PlateContent className={plateContentCN} placeholder='Type..' />
-      </div>
+      </EditorContainer>
     </Plate>
   );
+};
+
+export const EditorContainer = (
+  props: React.HTMLAttributes<HTMLDivElement>
+) => {
+  const editor = useEditorRef();
+  const containerRef =
+    useEditorContainerRef() as React.RefObject<HTMLDivElement>;
+
+  return <div id={editor.uid} ref={containerRef} {...props} />;
 };
