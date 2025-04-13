@@ -12,6 +12,14 @@ import { BlockContextMenu } from '../components/block-context-menu';
 export const blockSelectionPlugins = [
   BlockSelectionPlugin.configure(({ editor }) => ({
     options: {
+      onKeyDownSelecting: (e) => {
+        e.preventDefault();
+        if (e.key == 'Backspace') {
+          console.log(
+            editor.getPlugin(BlockSelectionPlugin).api.blockSelection.getNodes()
+          );
+        }
+      },
       enableContextMenu: true,
       isSelectable: (element, path) => {
         return (

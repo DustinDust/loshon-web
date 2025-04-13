@@ -13,7 +13,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Error } from '@/components/error';
 import { NotFound } from '@/components/not-found';
 import { useEffect } from 'react';
-import { PlateEditor } from '@/components/editor/editor';
+import { Editor, EditorContainer } from '@/components/editor/editor';
+import { Plate, usePlateEditor } from '@udecode/plate/react';
+import { useEditor } from '@/components/editor/use-editor';
 
 interface DocumentIdPageProps {
   params: {
@@ -33,6 +35,13 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
   });
   const { setCurrent, patchCurrent, currentDocument } = useLocalDocument();
   const { updateById } = useLocalDocuments();
+  const editor = useEditor({
+    handlers: {
+      onChange: (e) => {
+        console.log(e.value);
+      },
+    },
+  });
 
   useEffect(() => {
     if (!isLoading && !error && remoteDocumentResponse?.data) {
@@ -102,7 +111,11 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
           onUpdate={onUpdate}
           onChange={onChange}
         />
-        <PlateEditor />
+        <Plate editor={editor}>
+          <EditorContainer>
+            <Editor placeholder='Type / to get started...' />
+          </EditorContainer>
+        </Plate>
       </div>
     </div>
   );
