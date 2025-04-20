@@ -18,6 +18,7 @@ import {
 import { indentListPlugin } from './plugins/indent-list';
 import { blockSelectionPlugins } from './plugins/block-selection';
 import { floatingToolbarPlugin } from './plugins/floating-toolbar';
+import { datePlugin } from './plugins/date';
 
 interface IUseEditor {
   value?: any;
@@ -54,6 +55,7 @@ export const useEditor = ({
       softBreakPlugin,
       indentPlugin,
       indentListPlugin,
+      datePlugin,
 
       // functionality
       slashCommand,
